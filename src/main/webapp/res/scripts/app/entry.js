@@ -1,5 +1,5 @@
-baseOnePointURL = '/vzwallet/rest';
-//baseOnePointURL = '/rest';
+//baseOnePointURL = '/vzwallet/rest';
+baseOnePointURL = '/rest';
 userName = '';
 sessionExpireCallBack = function() {
 	Ext.Msg.alert('One Point', 'Session has expired. Please Login', function() {

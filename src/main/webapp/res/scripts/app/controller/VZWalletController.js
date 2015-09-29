@@ -3,7 +3,7 @@
  */
 Ext.define('wallet.controller.VZWalletController',{
 	extend: 'Ext.app.Controller',
-	views: ['LoginView', 'DecisionView', 'CashView','AddPayeeView', 'BillPayView', 'LoyaltyView'],
+	views: ['LoginView', 'DecisionView', 'CashView','AddPayeeView', 'BillPayView', 'LoyaltyView', 'StatementView'],
 	refs:[{
 		ref: 'loginview',
 		selector: 'loginview'
@@ -27,6 +27,10 @@ Ext.define('wallet.controller.VZWalletController',{
 	},{
 		ref: 'loyaltyview',
 		selector: 'loyaltyview'
+		
+	},{
+		ref: 'statementview',
+		selector: 'statementview'
 		
 	}],
 	init: function() {
@@ -160,6 +164,23 @@ Ext.define('wallet.controller.VZWalletController',{
 							}
 						})
 					}, this);
+					Ext.get('statement').on('click', function() {
+						this.hideAllViews();
+						var me = this;
+						this.getStatementview().show();
+						this.getStatementview().down('[itemId=stmtPanel]').getForm().reset();
+						this.getStatementview().down('[itemId=nameField]').setValue(userName);
+						this.getStatementview().down('[itemId=balField]').setValue(balAmountCheck());
+						Ext.Ajax.request({
+							url: baseOnePointURL+'/banking/getStatements',
+							success: function(response) {
+								var resp = Ext.decode(response.responseText);
+								if (resp.errorCode === 0) {
+									me.getStatementview().down('[itemId=stmtGrid]').getStore().loadData(resp.transactions);
+								}
+							}
+						})
+					}, this);
 				}
 			},
 			'button[itemId=cashGoBack]': {
@@ -182,6 +203,12 @@ Ext.define('wallet.controller.VZWalletController',{
 					}
 					
 				}				
+			},
+			'statementview button[itemId=stmtGoBack]': {
+				'click': function(btn) {
+					this.hideAllViews();
+					this.getDecisionview().show();
+				}
 			},
 			'cashview': {
 				'afterrender': function(view) {
@@ -395,6 +422,31 @@ Ext.define('wallet.controller.VZWalletController',{
 							}
 						}
 					});
+				}
+			},
+			'loyaltyview': {
+				'afterrender': function(view) {
+					var me = this, offersCnt = me.getLoyaltyview().down('[itemId=offersCnt]');
+					
+					Ext.Ajax.request({
+						url: baseOnePointURL+'/offers/get',
+						success: function(response) {
+							var resp = Ext.decode(response.responseText);
+							Ext.iterate(resp.offers, function(offer) {
+								offersCnt.add({
+									xtype: 'container',
+									html: '<div class="offersFont">'+offer.offerName+'</div>'
+								},{
+									xtype: 'container',
+									html: '<div class="offersDescFont">'+(Ext.isEmpty(offer.description) ? '': offer.description)+'</div>'
+								},{
+									xtype: 'tbspacer',
+									height: 10
+								});
+							});
+							offersCnt.doLayout();
+						}
+					})
 				}
 			}
 		});

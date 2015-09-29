@@ -1,8 +1,8 @@
 /**
  * 
  */
-Ext.define('wallet.view.LoyaltyView',{
-	alias: 'widget.loyaltyview',
+Ext.define('wallet.view.StatementView',{
+	alias: 'widget.statementview',
 	extend: 'Ext.container.Container',
 	layout: {
 		type: 'hbox',
@@ -12,7 +12,7 @@ Ext.define('wallet.view.LoyaltyView',{
 	style: 'background-color: #FFFFFF;background: url(res/images/Verizon_Logo.jpg)',
 	items:[{
 		xtype: 'form',
-		itemId: 'loyaltyPanel',
+		itemId: 'stmtPanel',
 		title: '<div class="redFont">Loyalty</div>',
 		width: '75%',
 		autoScroll: true,
@@ -106,40 +106,61 @@ Ext.define('wallet.view.LoyaltyView',{
 					align: 'middle'
 				},
 				items: [{
-					xtype: 'displayfield',
-					fieldLabel: '&nbsp;',
-					labelAlign: 'top',
-					fieldStyle: 'text-align:center',
-					fieldCls: 'greenFont12',
-					itemId: 'points',
-					name: 'points'
-				}]
-			},{
-				xtype: 'tbspacer',
-				height: 20
-			},{
-				xtype: 'container',
-				width: '75%',
-				layout: {
-					type: 'vbox',
-					pack: 'start',
-					align: 'left'
-				},
-				items: [{
-					xtype: 'fieldcontainer',
-					labelWidth: 200,
-					fieldLabel: 'Do you want to encash this points?',
-					layout: 'hbox',
-					items:[{
-						xtype: 'button',
-						text: 'Click Here',
-						scale: 'medium',
-						itemId: 'encashBtn'
+					xtype: 'grid',
+					itemId: 'stmtGrid',
+					width: '100%',
+					height: '40%',
+					autoScroll: true,
+					title: 'Statements',
+					store: new Ext.data.Store({
+						fields: ['payeeName', 'description', 'amount', 'date', 'debit', 'debit']
+					}),
+					columns:[{
+						dataIndex: 'payeeName',
+						text: 'Name',
+						menuDisabled: true,
+						sortable: false,
+						flex: 1
+					},{
+						dataIndex: 'description',
+						text: 'Description',
+						menuDisabled: true,
+						sortable: false,
+						flex: 1
+					},{
+						dataIndex: 'date',
+						text: 'Date',
+						menuDisabled: true,
+						sortable: false,
+						flex: 1
+					},{
+						dataIndex: 'debit',
+						text: 'Debit',
+						menuDisabled: true,
+						sortable: false,
+						flex: 1,
+						renderer: function(val, metaData, record, rowIdx, colIdx, store, view) {
+							if (val) {
+								return '<div style="border:1px solid green;">'+record.get('amount')+'</div>';
+							} else {
+								return '<div>&nbsp;</div>';
+							}
+						}
+					},{
+						dataIndex: 'debit',
+						text: 'Credit',
+						menuDisabled: true,
+						sortable: false,
+						flex: 1,
+						renderer: function(val, metaData, record, rowIdx, colIdx, store, view) {
+							if (!val) {
+								return '<div  style="border:1px solid red;">'+record.get('amount')+'</div>';
+							} else {
+								return '<div>&nbsp;</div>';
+							}
+						}
 					}]
 				}]
-			},{
-				xtype: 'tbspacer',
-				height: 20
 			},{
 				xtype: 'container',
 				width: '100%',
@@ -151,39 +172,8 @@ Ext.define('wallet.view.LoyaltyView',{
 				items: [{
 					xtype: 'button',
 					width: '20%',
-					itemId: 'loyaltyGoBack',
+					itemId: 'stmtGoBack',
 					text: 'Back'
-				}]
-			},{
-				xtype: 'tbspacer',
-				height: 20
-			},{
-				xtype: 'container',
-				width: '75%',
-				height: 20,
-				layout: {
-					type: 'vbox',
-					pack: 'center',
-					align: 'center'
-				},
-				itemId: 'result',
-				html: ''
-			},{
-				xtype: 'tbspacer',
-				height: 30
-			},{
-				xtype: 'container',
-				width: '75%',
-				layout: {
-					type: 'vbox',
-					pack: 'center',
-					align: 'center'
-				},
-				items:[{
-					xtype: 'container',
-					itemId: 'offersCnt',
-					layout: 'vbox',
-					width: '100%'
 				}]
 			}]
 	}]

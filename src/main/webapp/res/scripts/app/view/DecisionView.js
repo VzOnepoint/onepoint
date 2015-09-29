@@ -121,7 +121,7 @@ Ext.define('wallet.view.DecisionView',{
 						xtype: 'container',
 						height: '100%',
 						width: '100%',
-						html: '<b><a href="javascript:void(0);" id="loadCash">Load Cash</a></b>'
+						html: '<b><span style="cursor:pointer;" id="loadCash">Load Cash</span></b>'
 				}]
 			}]
 		},{
@@ -149,7 +149,7 @@ Ext.define('wallet.view.DecisionView',{
 					xtype: 'container',
 					height: '100%',
 					width: '100%',
-					html: '<b><a href="javascript:void(0);" id="addPayee">Add Payee</a></b>'
+					html: '<b><span style="cursor:pointer;" id="addPayee">Add Payee</span></b>'
 				}]
 			}]
 		},{
@@ -177,7 +177,35 @@ Ext.define('wallet.view.DecisionView',{
 					xtype: 'container',
 					height: '100%',
 					width: '100%',
-					html: '<b><a href="javascript:void(0);" id="billPay">Transfer Money / Bill Pay</a></b>'
+					html: '<b><span style="cursor:pointer;" id="billPay">Transfer Money / Bill Pay</span></b>'
+				}]
+			}]
+		},{
+			xtype: 'container',
+			padding: '0 0 10 0',
+			width: '30%',
+			layout: {
+				type: 'vbox',
+				pack: 'start',
+				align: 'left'
+			},
+			items: [{
+				xtype: 'container',
+				layout:{
+					type: 'table',
+					columns: 3
+				},
+				items:[{
+					xtype: 'container',
+					html: '<img src="./res/images/Loyalty_Offers.jpg" height="50" width="50"/>'
+				},{
+					xtype: 'tbspacer',
+					width: 10
+				},{
+					xtype: 'container',
+					height: '100%',
+					width: '100%',
+					html: '<b><span style="cursor:pointer;" id="loyalty">Loyalty Points / Offers</span></b>'
 				}]
 			}]
 		},{
@@ -204,7 +232,7 @@ Ext.define('wallet.view.DecisionView',{
 					xtype: 'container',
 					height: '100%',
 					width: '100%',
-					html: '<b><a href="javascript:void(0);" id="loyalty">Loyalty Points / Offers</a></b>'
+					html: '<b><span style="cursor:pointer;" id="statement">View Statements</span></b>'
 				}]
 			}]
 		}]

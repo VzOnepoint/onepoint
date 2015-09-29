@@ -25,7 +25,7 @@ balAmountCheck = function() {
 Ext.application({
 	name: 'wallet',
 	appFolder: 'res/scripts/app',
-	requires: ['wallet.view.LoginView', 'wallet.view.DecisionView', 'wallet.view.CashView', 'wallet.view.AddPayeeView', 'wallet.view.BillPayView', 'wallet.view.LoyaltyView'],
+	requires: ['wallet.view.LoginView', 'wallet.view.DecisionView', 'wallet.view.CashView', 'wallet.view.AddPayeeView', 'wallet.view.BillPayView', 'wallet.view.LoyaltyView', 'wallet.view.StatementView'],
 	controllers: ['VZWalletController'],
 	launch: function() {
 		Ext.create('Ext.container.Viewport',{
@@ -51,6 +51,9 @@ Ext.application({
 				hidden: true
 			},{
 				xtype: 'loyaltyview',
+				hidden: true
+			},{
+				xtype: 'statementview',
 				hidden: true
 			}]
 		});

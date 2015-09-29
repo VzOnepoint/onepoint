@@ -91,11 +91,10 @@ Ext.define('wallet.view.CashView',{
 					success: function(response) {
 						var response = Ext.decode(response.responseText);
 						if (response.errorCode === '0') {
-							window.location.href = 'index.jsp';
+							window.location.href = 'index.html';
 						}						
 					}
 				});
-				window.location.href = 'index.jsp';
 			}
 		}],
 		items: [{

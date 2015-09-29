@@ -81,7 +81,7 @@ Ext.define('wallet.view.BillPayView',{
 				'<img id="" src="res/images/Logout.png" role="presentation" height="15" width="15"/>'
 			],
 			handler: function() {
-				window.location.href = 'index.jsp';
+				window.location.href = 'index.html';
 			}
 		}],
 		layout: {

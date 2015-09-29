@@ -102,7 +102,7 @@ public class CoreBankingService {
 				
 				//if the registered payee is mdn based need to verify if the payee is registered user 
 				if(payee.isMdnAccount()) {
-					Response userServiceResponse = this.userService.getUserByMdn(user.getMdn());
+					Response userServiceResponse = this.userService.getUserByMdn(payee.getAccountNumber());
 					isValidPayee = (userServiceResponse.getErrorCode() == Constants.ERROR_CODE_SUCCESS && user.getMdn() != payee.getAccountNumber());
 				}
 				else 
@@ -229,7 +229,7 @@ public class CoreBankingService {
 							account.setBalance(account.getBalance() - amount);
 							
 							if(this.coreBankingDao.saveOrUpdateAccount(account)) { 
-								this.addTransactions(user, payee.getPayeeName(), payee.getDescription(), amount, true);
+								this.addTransactions(user, payee.getPayeeName(), "Transfer to " + payee.getPayeeName(), amount, true);
 								this.calculateLoyaltyPoints(user, amount);
 								response = this.utils.getResponse(Constants.ERROR_CODE_SUCCESS, "ERROR_CODE_SUCCESS");
 								response.setAccount(account);

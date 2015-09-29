@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import org.junit.Test;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class UserServiceTest {
 	@Test
 	public void test_CreateUser_Valid_User(){
 		User user = new User();
-		user.setMdn("9991234567");
+		user.setMdn("9999999999");
 		user.setUserName("TestUser");
 		user.setPassword("123456");
 		Response response = userService.createUser(user);
@@ -84,7 +85,53 @@ public class UserServiceTest {
 	 */
 	 @Test
 	 public void test_GetUserByMdn_Valid_Mdn(){
-		 Response response = userService.getUserByMdn("9991234567");
+		 Response response = userService.getUserByMdn("9999999999");
 		 Assert.assertTrue(response.getErrorCode() == Constants.ERROR_CODE_SUCCESS);
+		 Assert.assertTrue(response.getUser().getMdn().equals("9999999999"));
+	 }
+	 
+	 /**
+	 * Tests Userservice's loginUser using not registered mdn.
+	 */
+	 @Test
+	 public void test_LoginUser_Invalid_Mdn(){
+		 User user = new User();
+		 user.setMdn("9999999998");
+		 user.setPassword("123456");
+		 Response response = userService.loginUser(user);
+		 Assert.assertTrue(response.getErrorCode() == Constants.ERROR_CODE_NOT_REGISTERED);
+	 }
+	 
+	 /**
+	 * Tests Userservice's loginUser using valid.
+	 */
+	 @Test
+	 public void test_LoginUser_valid(){
+		User user = new User();
+		user.setMdn("9999999998");
+		user.setUserName("TestUser");
+		user.setPassword("123456");
+		userService.createUser(user);
+			
+		Response response = userService.loginUser(user);
+		Assert.assertTrue(response.getErrorCode() == Constants.ERROR_CODE_SUCCESS);
+		Assert.assertTrue(response.getUser().getMdn().equals("9999999998"));
+	 }
+	 
+	 /**
+	 * Tests Userservice's loginUser using invalid pin.
+	 */
+	 @Test
+	 public void test_LoginUser_Invalid_Pin(){
+		User user = new User();
+		user.setMdn("9999999997");
+		user.setUserName("TestUser");
+		user.setPassword("123456");
+		userService.createUser(user);
+		
+		user.setPassword("123457");
+		Response response = userService.loginUser(user);
+		System.out.println("Response " + response.getErrorCode());
+		Assert.assertTrue(response.getErrorCode() == Constants.ERROR_CODE_NOT_LOGGED_IN);
 	 }
 }

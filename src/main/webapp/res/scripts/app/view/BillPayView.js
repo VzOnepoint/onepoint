@@ -127,15 +127,17 @@ Ext.define('wallet.view.BillPayView',{
 						itemId: 'toPayee',
 						queryMode: 'local',
 						store: new Ext.data.Store({
-							fields: ['payeeName']
+							fields: ['payeeName', 'id']
 						}),
-						valueField:  'payeeName',
+						valueField:  'id',
 						displayField:  'payeeName',
 						value: ''
 					},{
 						xtype: 'textfield',
 						labelWidth: 120,
 						fieldLabel: 'Enter Amount ($)',
+						name: 'payeeAmount',
+						itemId: 'payeeAmount',
 						maskRe: /^[0-9\b]+$/,
 						beforeLabelTextTpl: '<span style="color:red;">*</span>'
 					}]
@@ -159,23 +161,45 @@ Ext.define('wallet.view.BillPayView',{
 				width: '75%',
 				itemId: 'toBillCnt',
 				hidden: true,
-				padding: '0 0 0 30',
+				padding: '0 0 0 10',
 				layout: {
 					type: 'vbox',
 					pack: 'start',
 					align: 'left'
 				},
 				items: [{
+					xtype: 'container',
+					defaults: {
+						padding: '0 10 0 0',
+					},
+					layout: 'vbox',
+					items: [{
 						xtype: 'combobox',
 						fieldLabel: 'Select Biller',
 						itemId: 'toBiller',
+						labelWidth: 120,
 						queryMode: 'local',
 						store: new Ext.data.Store({
-							fields: ['payeeName']
+							fields: ['payeeName', 'id']
 						}),
-						valueField:  'payeeName',
+						valueField:  'id',
 						displayField:  'payeeName',
+					},{
+						xtype: 'textfield',
+						labelWidth: 120,
+						fieldLabel: 'Enter Amount ($)',
+						name: 'amount',
+						itemId: 'billAmount',
+						maskRe: /^[0-9\b]+$/,
+						beforeLabelTextTpl: '<span style="color:red;">*</span>'
+					},{
+						xtype: 'textfield',
+						labelWidth: 120,
+						fieldLabel: 'Description',
+						name: 'description',
+						itemId: 'description'
 					}]
+				}]
 			},{
 				xtype: 'tbspacer',
 				height: 20
@@ -198,8 +222,23 @@ Ext.define('wallet.view.BillPayView',{
 				},{
 					xtype: 'button',
 					width: '20%',
+					itemId: 'billSubmit',
 					text: 'Submit'
 				}]
+			},{
+				xtype: 'tbspacer',
+				height: 20
+			},{
+				xtype: 'container',
+				width: '75%',
+				height: 20,
+				layout: {
+					type: 'vbox',
+					pack: 'center',
+					align: 'center'
+				},
+				itemId: 'billPayeeResult',
+				html: ''
 			}]
 	}]
 });

@@ -49,7 +49,7 @@ Ext.define('wallet.view.LoyaltyView',{
 						fieldLabel: 'Hi,',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
-						value: 'Anthoni'
+						value: ''
 					}]
 				},{
 					xtype: 'container',
@@ -64,11 +64,11 @@ Ext.define('wallet.view.LoyaltyView',{
 						xtype: 'displayfield',
 						type: 'nameField',
 						itemId: 'balField',
-						labelWidth: 150,
+						labelWidth: 130,
 						fieldLabel: 'Account Balance',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
-						value: '50$'
+						value: ''
 					}]
 				}]
 				
@@ -103,63 +103,17 @@ Ext.define('wallet.view.LoyaltyView',{
 				width: '75%',
 				layout: {
 					type: 'vbox',
-					pack: 'start',
-					align: 'left'
+					pack: 'center',
+					align: 'middle'
 				},
 				items: [{
-					xtype: 'textfield',
-					fieldLabel: 'Nick Name'
-					
-
-				}]
-			},{
-				xtype: 'container',
-				width: '75%',
-				layout: {
-					type: 'vbox',
-					pack: 'start',
-					align: 'left'
-				},
-				items: [{
-					xtype: 'textfield',
-					fieldLabel: 'MDN'
-				}]
-			},{
-				xtype: 'container',
-				width: '75%',
-				layout: {
-					type: 'vbox',
-					pack: 'start',
-					align: 'left'
-				},
-				items: [{
-					xtype: 'fieldcontainer',
-					layout: 'hbox',
-					defaults: {
-						padding: '0 10 0 0',
-					},
-					items:[{
-						xtype: 'combobox',
-						fieldLabel: 'Type Of Billers',
-						itemId: 'typeOfBillers',
-						queryMode: 'local',
-						store: ['Insurance','Electricity','Telephone'],
-						value: 'Insurance'
-					},{
-						xtype: 'combobox',
-						queryMode: 'local',
-						itemId: 'sectors',
-						store: new Ext.data.Store({
-							fields: ['displayField', 'valueField'],
-							data:[{
-								'displayField': 'Athena',
-								'valueField': 'Athena'
-							}]
-						}),
-						displayField: 'displayField',
-						valueField: 'valueField',
-						value: 'Athena'
-					}]
+					xtype: 'displayfield',
+					fieldLabel: '&nbsp;',
+					labelAlign: 'top',
+					fieldStyle: 'text-align:center',
+					fieldCls: 'greenFont12',
+					itemId: 'points',
+					name: 'points'
 				}]
 			},{
 				xtype: 'tbspacer',
@@ -174,12 +128,19 @@ Ext.define('wallet.view.LoyaltyView',{
 				},
 				items: [{
 					xtype: 'fieldcontainer',
-					defaultType: 'checkboxfield',
+					labelWidth: 200,
+					fieldLabel: 'Do you want to encash this points?',
 					layout: 'hbox',
 					items:[{
-						boxLabel: 'Auto Pay'
+						xtype: 'button',
+						text: 'Click Here',
+						scale: 'medium',
+						itemId: 'encashBtn'
 					}]
 				}]
+			},{
+				xtype: 'tbspacer',
+				height: 20
 			},{
 				xtype: 'container',
 				width: '100%',
@@ -193,14 +154,21 @@ Ext.define('wallet.view.LoyaltyView',{
 					width: '20%',
 					itemId: 'loyaltyGoBack',
 					text: 'Back'
-				},{
-					xtype: 'tbspacer',
-					width: '10%'
-				},{
-					xtype: 'button',
-					width: '20%',
-					text: 'Submit'
 				}]
+			},{
+				xtype: 'tbspacer',
+				height: 20
+			},{
+				xtype: 'container',
+				width: '75%',
+				height: 20,
+				layout: {
+					type: 'vbox',
+					pack: 'center',
+					align: 'center'
+				},
+				itemId: 'result',
+				html: ''
 			}]
 	}]
 });

@@ -178,7 +178,7 @@ Ext.define('wallet.view.DecisionView',{
 					xtype: 'container',
 					height: '100%',
 					width: '100%',
-					html: '<b><a href="javascript:void(0);" id="billPay">Transfer Money /Bill Pay</a></b>'
+					html: '<b><a href="javascript:void(0);" id="billPay">Transfer Money / Bill Pay</a></b>'
 				}]
 			}]
 		},{
@@ -205,7 +205,7 @@ Ext.define('wallet.view.DecisionView',{
 					xtype: 'container',
 					height: '100%',
 					width: '100%',
-					html: '<b><a href="javascript:void(0);" id="loyalty">Loyalty Offers</a></b>'
+					html: '<b><a href="javascript:void(0);" id="loyalty">Loyalty Points / Offers</a></b>'
 				}]
 			}]
 		}]

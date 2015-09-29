@@ -100,8 +100,10 @@ Ext.define('wallet.controller.VZWalletController',{
 					Ext.get('billPay').on('click', function() {
 						var me = this;
 						me.hideAllViews();
+						me.getBillpayview().down('[itemId=billPayPanel]').getForm().reset();
 						me.getBillpayview().down('[itemId=nameField]').setValue(userName);
 						me.getBillpayview().down('[itemId=balField]').setValue(balAmountCheck());
+						me.getBillpayview().down('[itemId=billPayeeResult]').update('');
 						Ext.Ajax.request({
 							url: baseOnePointURL+'/banking/getPayees',
 							async: false,
@@ -109,24 +111,25 @@ Ext.define('wallet.controller.VZWalletController',{
 								var resp = Ext.decode(response.responseText);
 								var payeeArr = [], billersArr = [];
 								if (resp.errorCode === 0) {
-									me.getBillpayview().down('[itemId=billPayPanel]').getForm().reset();
 									me.getBillpayview().down('[itemId=toPayeeCnt]').hide();						
 									me.getBillpayview().down('[itemId=toBillCnt]').hide();
 									Ext.iterate(resp.payees, function(item){
 										if (item.mdnAccount) {
 											payeeArr.push({
-												'payeeName': item.payeeName
+												'payeeName': item.payeeName,
+												'id': item.id
 											});
 										} else {
 											billersArr.push({
-												'payeeName': item.payeeName
+												'payeeName': item.payeeName,
+												'id': item.id
 											});
 										}
 									});
 									me.getBillpayview().down('[itemId=toPayee]').getStore().loadRawData(payeeArr);
-									me.getBillpayview().down('[itemId=toPayee]').setValue(payeeArr[0]['payeeName']);
+									me.getBillpayview().down('[itemId=toPayee]').setValue(payeeArr[0]['id']);
 									me.getBillpayview().down('[itemId=toBiller]').getStore().loadRawData(billersArr);
-									me.getBillpayview().down('[itemId=toBiller]').setValue(billersArr[0]['payeeName']);
+									me.getBillpayview().down('[itemId=toBiller]').setValue(billersArr[0]['id']);
 									me.getBillpayview().show();
 								}
 							}
@@ -134,8 +137,28 @@ Ext.define('wallet.controller.VZWalletController',{
 					}, this);
 					Ext.get('loyalty').on('click', function() {
 						this.hideAllViews();
-						this.getLoyaltyview().down('[itemId=loyaltyPanel]').getForm().reset();
+						var me = this;
 						this.getLoyaltyview().show();
+						this.getLoyaltyview().down('[itemId=loyaltyPanel]').getForm().reset();
+						this.getLoyaltyview().down('[itemId=nameField]').setValue(userName);
+						this.getLoyaltyview().down('[itemId=balField]').setValue(balAmountCheck());
+						Ext.Ajax.request({
+							url: baseOnePointURL+'/banking/getLoyaltyBalance',
+							async: false,
+							success: function(response) {
+								var respText = response.responseText;
+								var startString = respText.substring(0, respText.indexOf('"balance":')+'"balance":'.length);
+								var getBeforeString = respText.substring(respText.indexOf('"balance":')+'"balance":'.length);
+								var getAfterString =  getBeforeString.substring(getBeforeString.indexOf('}'));
+								var value = '"'+getBeforeString.substring(0, getBeforeString.indexOf('}'))+'"';
+								var totTalResponseText = startString+value+getAfterString;
+								console.log('totTalResponseText ',totTalResponseText);
+								var resp = Ext.decode(totTalResponseText);
+								if (resp.errorCode === 0) {
+									me.getLoyaltyview().down('[itemId=points]').setValue(resp.loyalty.balance);
+								}
+							}
+						})
 					}, this);
 				}
 			},
@@ -280,6 +303,58 @@ Ext.define('wallet.controller.VZWalletController',{
 					}
 				}
 			},
+			'billpayview button[itemId=billSubmit]': {
+				'click': function(btn) {
+					var me = this, accountId, payeeAmount;
+					if (this.getBillpayview().down('[itemId=billPayPanel]').getForm().findField('billRadio').getValue()) {
+						accountId = this.getBillpayview().down('[itemId=toPayee]').getValue();
+						payeeAmount = this.getBillpayview().down('[itemId=payeeAmount]').getValue();
+						Ext.Ajax.request({
+							url: baseOnePointURL+'/banking/transfer/'+accountId+'/'+payeeAmount,
+							method: 'POST',
+							async: false,
+							success: function(response) {
+								var resp = Ext.decode(response.responseText);
+								if (resp.errorCode === 0) {
+									Ext.Msg.alert('One Point', 'Your amount has been transferred. Thanks for using our service. ', function(){
+										me.getBillpayview().down('[itemId=balField]').setValue(balAmountCheck());
+										me.getBillpayview().down('[itemId=billPayeeResult]').update('');
+									});
+								} else {
+									me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="redFont">'+resp.errorMessage+'</div>');
+								}
+							}
+						});
+					} else {
+						accountId = this.getBillpayview().down('[itemId=toBiller]').getValue();
+						var billerName = this.getBillpayview().down('[itemId=toBiller]').getRawValue();
+						var billAmount = this.getBillpayview().down('[itemId=billAmount]').getValue();
+						var jsonData = {
+							'id': accountId,
+							'payeeName': billerName,
+							method: 'POST',
+							'description': this.getBillpayview().down('[itemId=description]').getValue(),
+							'accountNumber': '9999999999'
+						};
+						Ext.Ajax.request({
+							url: baseOnePointURL+'/banking/payBills/'+billAmount,
+							jsonData: jsonData,
+							async: false,
+							success: function(response) {
+								var resp = Ext.decode(response.responseText);
+								if (resp.errorCode === 0) {
+									Ext.Msg.alert('One Point', 'You bill is paid. Please check your loyalty points.', function(){
+										me.getBillpayview().down('[itemId=balField]').setValue(balAmountCheck());
+										me.getBillpayview().down('[itemId=billPayeeResult]').update('');
+									});
+								} else {
+									me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="redFont">'+resp.errorMessage+'</div>');
+								}
+							}
+						})
+					}
+				}
+			},
 			'billpayview button[itemId=billGoBack]': {
 				'click': function(btn) {
 					var me = this;
@@ -304,6 +379,22 @@ Ext.define('wallet.controller.VZWalletController',{
 				'click': function(view) {
 					this.hideAllViews();
 					this.getDecisionview().show();
+				}
+			},
+			'loyaltyview button[itemId=encashBtn]': {
+				'click': function(view) {
+					var me = this;
+					Ext.Ajax.request({
+						url: baseOnePointURL+'/banking/encashLoyaltyPoints',
+						success: function(response) {
+							var resp = Ext.decode(response.responseText);
+							if (resp.errorCode === 0) {
+								Ext.Msg.alert('One Point', 'Your points has been encashed.')
+							} else {
+								me.getLoyaltyview().down('[itemId=result]').update('<div class="redFont">'+resp.errorMessage+'</div>');
+							}
+						}
+					});
 				}
 			}
 		});

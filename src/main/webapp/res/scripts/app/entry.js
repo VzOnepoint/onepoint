@@ -3,7 +3,7 @@ baseOnePointURL = '/rest';
 userName = '';
 sessionExpireCallBack = function() {
 	Ext.Msg.alert('One Point', 'Session has expired. Please Login', function() {
-		window.location.href = 'index.jsp';
+		window.location.href = 'index.html';
 	});
 };
 balAmountCheck = function() {

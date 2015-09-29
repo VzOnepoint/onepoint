@@ -1,0 +1,61 @@
+<html>
+<head>
+	<title>Test Page</title>
+	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		function makeRequest(){
+			var hostName = 'http://' + $("#hostName").val();
+			var apiPath = $("#restPath").val();
+			var requestJsonVal = $("#requestJson").val();
+			var method = $("#httpMethodSel").val();
+			console.log(hostName + apiPath);
+			$.ajax({
+			   url: hostName + apiPath,
+			   type: method,
+			   contentType: 'application/json',
+			   data: requestJsonVal,			   
+			   error: function() {
+				 $("#responseJson").val('An error has occurred');
+			   },			   
+			   success: function(data) {
+				  $("#responseJson").val(JSON.stringify(data));
+			   },
+			   
+			});
+		}
+	</script>
+</head>
+<body>
+	<table>
+		<tr>
+			<td>Host Name:</td>
+			<td><input type="text" id="hostName" value="localhost:8080" size="50"/></td>
+		</tr>
+		<tr>
+			<td>Rest API Path:</td>
+			<td><input type="text" id="restPath" value="" size="50"/></td>
+		</tr>
+		<tr>
+			<td>Http Method:</td>
+			<td>
+				<select id="httpMethodSel">
+				  <option value="POST">POST</option>
+				  <option value="GET">GET</option>				  
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>Request Json:</td>
+			<td><textarea id="requestJson" rows="25" cols="100"></textarea></td>
+		</tr>
+		<tr>
+			<td>Response Json:</td>
+			<td><textarea id="responseJson" rows="25" cols="100"></textarea></td>
+		</tr>
+		<tr>
+			<td><input type="button" value="submit" onclick="makeRequest();"/></td>
+			<td></td>
+		</tr>
+	</table>
+</body>
+</html>

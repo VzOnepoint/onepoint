@@ -1,0 +1,19 @@
+language: java
+script: mvn install -Popenshift
+deploy:
+  provider: openshift
+  user: "vzonepoint@gmail.com"
+  password: "Verizon1!" # can be encrypted
+  domain: "vzonepoint"
+  app: "my"
+  skip_cleanup: true
+  #deployment_branch: "vztest"
+notifications:
+  #hipchat: wBPGlg1L8W489S0WptesUhv8qZAhHmDzZUygJ5iQ@vzwonepoint
+  email:
+    recipients:
+      - skrishna.joy@gmail.com
+      - forsrinivasan@gmail.com
+      - anthonilawrance@gmail.com
+    on_success: always
+    on_failure: always

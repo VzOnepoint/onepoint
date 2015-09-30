@@ -102,7 +102,7 @@ Ext.define('wallet.view.DecisionView',{
 		},
 		items: [{
 			xtype: 'container',
-			width: '50%',
+			width: '60%',
 			padding: '0 0 10 20',
 			layout: {
 				type: 'vbox',
@@ -133,7 +133,7 @@ Ext.define('wallet.view.DecisionView',{
 		},{
 			xtype: 'container',
 			padding: '0 0 10 20',
-			width: '50%',
+			width: '60%',
 			layout: {
 				type: 'vbox',
 				pack: 'start',
@@ -163,7 +163,7 @@ Ext.define('wallet.view.DecisionView',{
 		},{
 			xtype: 'container',
 			padding: '0 0 10 20',
-			width: '50%',
+			width: '60%',
 			layout: {
 				type: 'vbox',
 				pack: 'start',
@@ -193,7 +193,7 @@ Ext.define('wallet.view.DecisionView',{
 		},{
 			xtype: 'container',
 			padding: '0 0 10 20',
-			width: '50%',
+			width: '60%',
 			layout: {
 				type: 'vbox',
 				pack: 'start',
@@ -222,7 +222,7 @@ Ext.define('wallet.view.DecisionView',{
 			}]
 		},{
 			xtype: 'container',
-			width: '50%',
+			width: '60%',
 			layout: {
 				type: 'vbox',
 				pack: 'start',

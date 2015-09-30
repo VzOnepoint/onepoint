@@ -101,7 +101,7 @@ Ext.define('wallet.view.LoyaltyView',{
 		items: [{
 				xtype: 'container',
 				width: '75%',
-				height: 170,
+				height: 180,
 				padding: '20 20 20 20',
 				layout: {
 					type: 'vbox',
@@ -111,7 +111,11 @@ Ext.define('wallet.view.LoyaltyView',{
 				items:[{
 					xtype: 'container',
 					padding: '0 0 5 0',
-					html: 'Thanks for using our service. We appreciate your loyalty with reward points.'
+					html: 'Thanks for using our service.'
+				},{
+					xtype: 'container',
+					padding: 0,
+					html: 'We appreciate your loyalty with reward points.'					
 				},{
 					xtype: 'container',
 					style: 'cursor:pointer;',
@@ -132,7 +136,7 @@ Ext.define('wallet.view.LoyaltyView',{
 				},
 				items: [{
 					xtype: 'button',
-					width: '10%',
+					width: '20%',
 					scale: 'medium',
 					itemId: 'loyaltyGoBack',
 					text: 'Back'

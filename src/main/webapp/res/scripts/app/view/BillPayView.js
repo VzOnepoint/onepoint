@@ -129,11 +129,11 @@ Ext.define('wallet.view.BillPayView',{
 					defaults:{
 						padding: '0 10 0 0',
 					},
-					layout: 'hbox',
+					layout: 'vbox',
 					items:[{
 						xtype: 'combobox',
 						fieldLabel: 'To',
-						labelWidth: 40,
+						labelWidth: 120,
 						itemId: 'toPayee',
 						queryMode: 'local',
 						store: new Ext.data.Store({

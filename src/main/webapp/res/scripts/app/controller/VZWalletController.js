@@ -40,13 +40,14 @@ Ext.define('wallet.controller.VZWalletController',{
 					//this.getLoginview().down('[itemId=okBtn]').setDisabled(Ext.isEmpty(newVal));
 					var existingUser = false, newUser = false;
 					if (!Ext.isEmpty(newVal) && newVal.length === 10 ) {
+						field.up('[itemId=loginview]').down('[itemId=okBtn]').enable();
 						Ext.Ajax.request({
 							url: baseOnePointURL+'/account/get/'+newVal,
 							success: function(response) {
 								var resp = Ext.decode(response.responseText);
 								if (resp.errorCode === 3) {
 									newUser = true;
-									Ext.Msg.alert('OnePoint', resp.errorMessage, function() {
+									Ext.Msg.alert('OnePoint Payment', resp.errorMessage, function() {
 										field.up('[itemId=loginview]').down('[itemId=pinCnt]').show();
 										field.up('[itemId=loginview]').down('[itemId=rePinCnt]').show();
 										field.up('[itemId=loginview]').down('[itemId=nameCnt]').show();
@@ -62,6 +63,12 @@ Ext.define('wallet.controller.VZWalletController',{
 								
 							}
 						});
+					} else {
+						field.up('[itemId=loginview]').down('[itemId=rePinCnt]').hide();
+						field.up('[itemId=loginview]').down('[itemId=pinCnt]').hide();
+						field.up('[itemId=loginview]').down('[itemId=nameCnt]').hide();
+						field.up('[itemId=loginview]').down('[itemId=okBtn]').setText('OK');
+						field.up('[itemId=loginview]').down('[itemId=okBtn]').disable();
 					}
 				}
 			},
@@ -91,17 +98,29 @@ Ext.define('wallet.controller.VZWalletController',{
 			},
 			'decisionview': {
 				'afterrender': function(view) {
-					Ext.get('loadCash').on('click', function() {
+					view.down('[itemId=loadCashCnt]').getEl().on('click', function() {
 						this.hideAllViews();
 						this.getCashview().show();
 						this.getCashview().down('[itemId=cashPanel]').getForm().reset();
 						this.getCashview().down('[itemId=nameField]').setValue(userName);
 						this.getCashview().down('[itemId=balField]').setValue(balAmountCheck());
+						this.getCashview().down('[itemId=cashResult]').update('');
+						this.getCashview().down('[itemId=creditCardName]').setValue(userName);
+						this.getCashview().down('[itemId=debitCardName]').setValue(userName);
 						Ext.iterate(this.getCashview().down('[itemId=cashPanel]').query('container[defaultShow=false]'), function(cnt) {
 							cnt.hide();
 						});
 					}, this);
-					Ext.get('billPay').on('click', function() {
+					view.down('[itemId=addPayeeCnt]').getEl().on('click', function() {
+						this.hideAllViews();
+						this.getAddpayeeview().down('[itemId=addPayeePanel]').getForm().reset();
+						this.hideAllAddPayeeViews();
+						this.getAddpayeeview().show();
+						this.getAddpayeeview().down('[itemId=nameField]').setValue(userName);
+						this.getAddpayeeview().down('[itemId=balField]').setValue(balAmountCheck());
+						this.getAddpayeeview().down('[itemId=payeeResult]').update('');
+					}, this);
+					view.down('[itemId=billPayCnt]').getEl().on('click', function() {
 						var me = this;
 						me.hideAllViews();
 						me.getBillpayview().down('[itemId=billPayPanel]').getForm().reset();
@@ -143,7 +162,7 @@ Ext.define('wallet.controller.VZWalletController',{
 							}
 						});
 					}, this);
-					Ext.get('loyalty').on('click', function() {
+					view.down('[itemId=loyaltyCnt]').getEl().on('click', function() {
 						this.hideAllViews();
 						var me = this;
 						this.getLoyaltyview().show();
@@ -164,12 +183,12 @@ Ext.define('wallet.controller.VZWalletController',{
 								console.log('totTalResponseText ',totTalResponseText);
 								var resp = Ext.decode(totTalResponseText);
 								if (resp.errorCode === 0) {
-									me.getLoyaltyview().down('[itemId=points]').update('<div class="pointsRadius" style="height:100%;width:100%;"><div class="yellowFont60">'+resp.loyalty.balance+'</div></div>');
+									me.getLoyaltyview().down('[itemId=points]').update('<div class="pointsRadius" style="height:100%;width:100%;"><div class="yellowFont60">'+Ext.util.Format.round(resp.loyalty.balance)+'</div></div>');
 								}
 							}
 						})
 					}, this);
-					Ext.get('statement').on('click', function() {
+					view.down('[itemId=statementCnt]').getEl().on('click', function() {
 						this.hideAllViews();
 						var me = this;
 						this.getStatementview().show();
@@ -215,23 +234,16 @@ Ext.define('wallet.controller.VZWalletController',{
 					this.getDecisionview().show();
 				}
 			},
-			'cashview': {
-				'afterrender': function(view) {
-					Ext.get('addPayee').on('click', function() {
-						this.hideAllViews();
-						this.getAddpayeeview().down('[itemId=addPayeePanel]').getForm().reset();
-						this.hideAllAddPayeeViews();
-						this.getAddpayeeview().show();
-						this.getAddpayeeview().down('[itemId=nameField]').setValue(userName);
-						this.getAddpayeeview().down('[itemId=balField]').setValue(balAmountCheck());
-						this.getAddpayeeview().down('[itemId=payeeResult]').update('');
-					}, this);
-					
-				}
-			},
 			'cashview button[itemId=cashSubmit]': {
 				'click': function(btn) {
+					var me = this;
 					var amount = btn.up('cashview').down('[itemId=loadAmount]').getValue(), me = this;
+					if (Ext.isEmpty(amount)) {
+						Ext.Msg.alert('OnePoint Payment', 'Please enter valid amount.', function() {
+								me.getCashview().down('[itemId=cashResult]').update('');
+							});
+							return;
+					}
 					Ext.Ajax.request({
 						url: baseOnePointURL+'/banking/loadCash/'+amount,
 						async: false,
@@ -239,14 +251,10 @@ Ext.define('wallet.controller.VZWalletController',{
 						success: function(response) {
 							var res = Ext.decode(response.responseText);
 							if (res.errorCode === 0) {
-								Ext.Msg.alert('One Point', 'Amount Successfully loaded...', function() {
-									me.hideAllViews();
-									me.getDecisionview().down('[itemId=balField]').show();
-									me.getDecisionview().down('[itemId=balField]').setValue(balAmountCheck());
-									me.getDecisionview().show();
-								})							
+								me.getCashview().down('[itemId=balField]').setValue(balAmountCheck());
+								me.getCashview().down('[itemId=cashResult]').update('<div class="greenFont">Amount Successfully loaded...</div>');
 							} else {
-								Ext.Msg.alert('One Point', res.errorMessage);
+								me.getCashview().down('[itemId=cashResult]').update('<div class="redFont">'+res.errorMessage+'</div>');
 							}
 						}
 					});
@@ -261,10 +269,25 @@ Ext.define('wallet.controller.VZWalletController',{
 			'addpayeeview button[itemId=payeeSubmit]': {
 				'click': function(btn) {
 					var getFormValues = btn.up('addpayeeview').down('[itemId=addPayeePanel]').getForm().getValues(), me = this;
+					me.getAddpayeeview().down('[itemId=payeeResult]').update('');
+					if(btn.up('addpayeeview').down('[itemId=addPayeePanel]').getForm().findField('typeOfBill').getValue()) {
+						if (Ext.isEmpty(getFormValues['payeeName'])) {
+							Ext.Msg.alert('OnePoint Payment', 'Please enter valid Nick name');
+							return;
+						} else if (getFormValues['payeeName'].length < 5) {
+							Ext.Msg.alert('OnePoint Payment','Invalid Payee name, must be between 5 to 50 characters!');
+							return;
+						}
+					} else {
+						if (Ext.isEmpty(btn.up('addpayeeview').down('[itemId=actNumber]').getValue())) {
+							Ext.Msg.alert('OnePoint Payment', 'Please enter valid Account Number');
+							return;
+						}
+					}
 					Ext.apply(getFormValues, {'mdnAccount': btn.up('addpayeeview').down('[itemId=addPayeePanel]').getForm().findField('typeOfBill').getValue()});
 					if (!btn.up('addpayeeview').down('[itemId=addPayeePanel]').getForm().findField('typeOfBill').getValue()) {
 						Ext.apply(getFormValues, {'accountNumber':btn.up('addpayeeview').down('[itemId=actNumber]').getValue()});
-						Ext.apply(getFormValues, {'payeeName': btn.up('addpayeeview').down('[itemId=typeOfBillers]').getValue(), 'description': btn.up('addpayeeview').down('[itemId=sectors]').getValue()})
+						Ext.apply(getFormValues, {'payeeName': btn.up('addpayeeview').down('[itemId=sectors]').getValue(), 'description': btn.up('addpayeeview').down('[itemId=sectors]').getValue()})
 					}
 					Ext.Ajax.request({
 						url: baseOnePointURL+'/banking/registerPayee',
@@ -279,8 +302,7 @@ Ext.define('wallet.controller.VZWalletController',{
 								me.getAddpayeeview().down('[itemId=payeeResult]').update('<div class="redFont">'+res.errorMessage+'</div>');
 							}
 						}
-						
-					})
+					});
 				}
 			},
 			'addpayeeview radiofield': {
@@ -356,7 +378,7 @@ Ext.define('wallet.controller.VZWalletController',{
 						accountId = this.getBillpayview().down('[itemId=toPayee]').getValue();
 						payeeAmount = this.getBillpayview().down('[itemId=payeeAmount]').getValue();
 						if (Ext.isEmpty(payeeAmount)) {
-							Ext.Msg.alert('One Point', 'Please enter valid amount.', function() {
+							Ext.Msg.alert('OnePoint Payment', 'Please enter valid amount.', function() {
 								me.getBillpayview().down('[itemId=billPayeeResult]').update('');
 							});
 							return;
@@ -368,10 +390,8 @@ Ext.define('wallet.controller.VZWalletController',{
 							success: function(response) {
 								var resp = Ext.decode(response.responseText);
 								if (resp.errorCode === 0) {
-									Ext.Msg.alert('One Point', 'Your amount has been transferred. Thanks for using our service. ', function(){
-										me.getBillpayview().down('[itemId=balField]').setValue(balAmountCheck());
-										me.getBillpayview().down('[itemId=billPayeeResult]').update('');
-									});
+									me.getBillpayview().down('[itemId=balField]').setValue(balAmountCheck());
+									me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="greenFont">Your amount has been transferred. Thanks for using our service.</div>');
 								} else {
 									me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="redFont">'+resp.errorMessage+'</div>');
 								}
@@ -382,7 +402,7 @@ Ext.define('wallet.controller.VZWalletController',{
 						var billerName = this.getBillpayview().down('[itemId=toBiller]').getRawValue();
 						var billAmount = this.getBillpayview().down('[itemId=billAmount]').getValue();
 						if (Ext.isEmpty(billAmount)) {
-							Ext.Msg.alert('One Point', 'Please enter valid amount.', function() {
+							Ext.Msg.alert('OnePoint Payment', 'Please enter valid amount.', function() {
 								me.getBillpayview().down('[itemId=billPayeeResult]').update('');
 							});
 							return;
@@ -390,21 +410,19 @@ Ext.define('wallet.controller.VZWalletController',{
 						var jsonData = {
 							'id': accountId,
 							'payeeName': billerName,
-							method: 'POST',
 							'description': this.getBillpayview().down('[itemId=description]').getValue(),
 							'accountNumber': '9999999999'
 						};
 						Ext.Ajax.request({
 							url: baseOnePointURL+'/banking/payBills/'+billAmount,
+							method: 'POST',
 							jsonData: jsonData,
 							async: false,
 							success: function(response) {
 								var resp = Ext.decode(response.responseText);
 								if (resp.errorCode === 0) {
-									Ext.Msg.alert('One Point', 'You bill is paid. Please check your loyalty points.', function(){
-										me.getBillpayview().down('[itemId=balField]').setValue(balAmountCheck());
-										me.getBillpayview().down('[itemId=billPayeeResult]').update('');
-									});
+									me.getBillpayview().down('[itemId=balField]').setValue(balAmountCheck());
+									me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="greenFont">Your bill is paid. Please check your loyalty points.</div>');
 								} else {
 									me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="redFont">'+resp.errorMessage+'</div>');
 								}
@@ -447,7 +465,7 @@ Ext.define('wallet.controller.VZWalletController',{
 						success: function(response) {
 							var resp = Ext.decode(response.responseText);
 							if (resp.errorCode === 0) {
-								Ext.Msg.alert('One Point', 'Your points has been encashed.')
+								Ext.Msg.alert('OnePoint Payment', 'Your points has been encashed.')
 							} else {
 								me.getLoyaltyview().down('[itemId=result]').update('<div class="redFont">'+resp.errorMessage+'</div>');
 							}
@@ -487,7 +505,7 @@ Ext.define('wallet.controller.VZWalletController',{
 							success: function(response) {
 								var resp = Ext.decode(response.responseText);
 								if (resp.errorCode === 0) {
-									Ext.Msg.alert('One Point', 'Your points has been encashed.')
+									Ext.Msg.alert('OnePoint Payment', 'Your points has been encashed.')
 								} else {
 									me.getLoyaltyview().down('[itemId=result]').update('<div class="redFont">'+resp.errorMessage+'</div>');
 								}

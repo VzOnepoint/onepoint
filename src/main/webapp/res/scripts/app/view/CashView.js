@@ -13,7 +13,7 @@ Ext.define('wallet.view.CashView',{
 	items:[{
 		xtype: 'form',
 		itemId: 'cashPanel',
-		title: '<div class="redFontTitle">Payments</div>',
+		title: '<div class="redFontTitle">OnePoint Payment - <span style="font-style:italic">Load Cash</span></div>',
 		width: '75%',
 		autoScroll: true,
 		height: '85%',
@@ -45,8 +45,9 @@ Ext.define('wallet.view.CashView',{
 						labelSeparator: '',
 						type: 'nameField',
 						itemId: 'nameField',
-						labelWidth: 15,
-						fieldLabel: 'Hi,',
+						padding: '0 0 0 5',
+						labelWidth: 65,
+						fieldLabel: 'Welcome',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
 						value: ''
@@ -64,8 +65,8 @@ Ext.define('wallet.view.CashView',{
 						xtype: 'displayfield',
 						type: 'nameField',
 						itemId: 'balField',
-						labelWidth: 130,
-						fieldLabel: 'Account Balance',
+						labelWidth: 65,
+						fieldLabel: 'Balance',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
 						value: ''
@@ -83,7 +84,7 @@ Ext.define('wallet.view.CashView',{
 			type: 'mytool',
 			width: 'auto',
 			renderTpl: [
-				'<img id="" src="res/images/Logout.png" role="presentation" height="15" width="15"/>'
+				'<img id="" src="res/images/Logout.png" role="presentation" height="25" width="25"/>'
 			],
 			handler: function() {
 				Ext.Ajax.request({
@@ -135,10 +136,13 @@ Ext.define('wallet.view.CashView',{
 						xtype: 'textfield',
 						fieldLabel: 'CVV',
 						maskRe: /^[0-9\b]+$/,
+						maxLength: 3,
+						enforceMaxLength: true,
 						inputType: 'password',
 						width: 140
 					},{
 						xtype: 'textfield',
+						itemId: 'creditCardName',
 						fieldLabel: 'Card Holder Name',
 						value: ''
 					},{
@@ -200,11 +204,14 @@ Ext.define('wallet.view.CashView',{
 					},{
 						xtype: 'textfield',
 						fieldLabel: 'CVV',
+						maxLength: 3,
+						enforceMaxLength: true,
 						maskRe: /^[0-9\b]+$/,
 						inputType: 'password',
 						width: 140
 					},{
 						xtype: 'textfield',
+						itemId: 'debitCardName',
 						fieldLabel: 'Card Holder Name',
 						value: ''
 					},{
@@ -290,6 +297,7 @@ Ext.define('wallet.view.CashView',{
 				height: 20
 			},{
 				xtype: 'container',
+				padding: '0 0 20 0',
 				width: '100%',
 				layout: {
 					type: 'hbox',
@@ -299,6 +307,7 @@ Ext.define('wallet.view.CashView',{
 				items: [{
 					xtype: 'button',
 					width: '20%',
+					scale: 'medium',
 					itemId: 'cashGoBack',
 					text: 'Back'
 				},{
@@ -307,8 +316,23 @@ Ext.define('wallet.view.CashView',{
 				},{
 					xtype: 'button',
 					width: '20%',
+					scale: 'medium',
 					itemId: 'cashSubmit',
 					text: 'Submit'
+				}]
+			},{
+				xtype: 'container',
+				width: '75%',
+				padding: '10 0 10 20',
+				layout: {
+					type: 'vbox',
+					pack: 'start',
+					align: 'left'
+				},
+				items: [{
+					xtype: 'container',
+					itemId: 'cashResult',
+					html: ''
 				}]
 			},{
 				xtype: 'container',
@@ -321,6 +345,8 @@ Ext.define('wallet.view.CashView',{
 				},
 				items: [{
 					xtype: 'image',
+					width: 400,
+					height: 70,
 					src: 'res/images/Payment_Card.png'
 				}]
 			}]

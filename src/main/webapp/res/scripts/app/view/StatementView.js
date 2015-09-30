@@ -13,7 +13,7 @@ Ext.define('wallet.view.StatementView',{
 	items:[{
 		xtype: 'form',
 		itemId: 'stmtPanel',
-		title: '<div class="redFontTitle">Loyalty</div>',
+		title: '<div class="redFontTitle">OnePoint Payment - <span style="font-style:italic">Statments</span></div>',
 		width: '75%',
 		autoScroll: true,
 		height: '85%',
@@ -45,8 +45,9 @@ Ext.define('wallet.view.StatementView',{
 						labelSeparator: '',
 						type: 'nameField',
 						itemId: 'nameField',
-						labelWidth: 15,
-						fieldLabel: 'Hi,',
+						padding: '0 0 0 5',
+						labelWidth: 65,
+						fieldLabel: 'Welcome',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
 						value: ''
@@ -64,8 +65,8 @@ Ext.define('wallet.view.StatementView',{
 						xtype: 'displayfield',
 						type: 'nameField',
 						itemId: 'balField',
-						labelWidth: 130,
-						fieldLabel: 'Account Balance',
+						labelWidth: 65,
+						fieldLabel: 'Account',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
 						value: ''
@@ -78,7 +79,7 @@ Ext.define('wallet.view.StatementView',{
 			type: 'mytool',
 			width: 'auto',
 			renderTpl: [
-				'<img id="" src="res/images/Logout.png" role="presentation" height="15" width="15"/>'
+				'<img id="" src="res/images/Logout.png" role="presentation" height="25" width="25"/>'
 			],
 			handler: function() {
 				Ext.Ajax.request({
@@ -218,6 +219,7 @@ Ext.define('wallet.view.StatementView',{
 				},
 				items: [{
 					xtype: 'button',
+					scale: 'medium',
 					width: '20%',
 					itemId: 'stmtGoBack',
 					text: 'Back'

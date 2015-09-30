@@ -13,7 +13,7 @@ Ext.define('wallet.view.AddPayeeView',{
 	items:[{
 		xtype: 'form',
 		itemId: 'addPayeePanel',
-		title: '<div class="redFontTitle">Register Payee</div>',
+		title: '<div class="redFontTitle">OnePoint Payment - <span style="font-style:italic">Add Payee</span></div>',
 		width: '75%',
 		autoScroll: true,
 		height: '85%',
@@ -44,8 +44,9 @@ Ext.define('wallet.view.AddPayeeView',{
 						labelSeparator: '',
 						type: 'nameField',
 						itemId: 'nameField',
-						labelWidth: 15,
-						fieldLabel: 'Hi,',
+						padding: '0 0 0 5',
+						labelWidth: 65,
+						fieldLabel: 'Welcome',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
 						value: ''
@@ -63,8 +64,8 @@ Ext.define('wallet.view.AddPayeeView',{
 						xtype: 'displayfield',
 						type: 'nameField',
 						itemId: 'balField',
-						labelWidth: 130,
-						fieldLabel: 'Account Balance',
+						labelWidth: 65,
+						fieldLabel: 'Balance',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
 						value: ''
@@ -77,7 +78,7 @@ Ext.define('wallet.view.AddPayeeView',{
 			type: 'mytool',
 			width: 'auto',
 			renderTpl: [
-				'<img id="" src="res/images/Logout.png" role="presentation" height="15" width="15"/>'
+				'<img id="" src="res/images/Logout.png" role="presentation" height="25" width="25"/>'
 			],
 			handler: function() {
 				Ext.Ajax.request({
@@ -135,6 +136,9 @@ Ext.define('wallet.view.AddPayeeView',{
 					fieldLabel: 'MDN'
 				}]
 			},{
+				xtype: 'tbspacer',
+				height: 20
+			},{
 				xtype: 'container',
 				width: '75%',
 				layout: {
@@ -169,21 +173,36 @@ Ext.define('wallet.view.AddPayeeView',{
 					fieldLabel: 'Account No'
 				},{
 					xtype: 'fieldcontainer',
-					layout: 'hbox',
+					layout: 'vbox',
 					defaults: {
 						padding: '0 10 0 0',
 					},
 					items:[{
 						xtype: 'combobox',
-						fieldLabel: 'Type Of Billers',
+						fieldLabel: 'Biller Type',
 						itemId: 'typeOfBillers',
 						queryMode: 'local',
-						store: ['Insurance','Electricity','Telephone'],
+						store: new Ext.data.Store({
+							fields: ['valueField', 'displayField'],
+							data: [{
+								'valueField': 'Insurance',
+								'displayField': 'Insurance'
+							},{
+								'valueField': 'Electricity',
+								'displayField': 'Electricity'
+							},{
+								'valueField': 'Telephone',
+								'displayField': 'Telephone'
+							}]
+						}),
+						valueField: 'valueField',
+						displayField: 'displayField',
 						value: 'Insurance'
 					},{
 						xtype: 'combobox',
 						queryMode: 'local',
 						itemId: 'sectors',
+						fieldLabel: 'Merchandise',
 						store: new Ext.data.Store({
 							fields: ['displayField', 'valueField'],
 							data:[{
@@ -219,12 +238,14 @@ Ext.define('wallet.view.AddPayeeView',{
 				items: [{
 					xtype: 'fieldcontainer',
 					defaultType: 'checkboxfield',
-					cls: 'labelBold',
 					layout: 'hbox',
 					items:[{
 						boxLabel: 'Auto Pay',
 					}]
 				}]
+			},{
+				xtype: 'tbspacer',
+				height: 20
 			},{
 				xtype: 'container',
 				width: '100%',
@@ -236,6 +257,7 @@ Ext.define('wallet.view.AddPayeeView',{
 				items: [{
 					xtype: 'button',
 					width: '20%',
+					scale: 'medium',
 					itemId: 'payeeGoBack',
 					text: 'Back'
 				},{
@@ -244,6 +266,7 @@ Ext.define('wallet.view.AddPayeeView',{
 				},{
 					xtype: 'button',
 					width: '20%',
+					scale: 'medium',
 					itemId: 'payeeSubmit',
 					text: 'Submit'
 				}]

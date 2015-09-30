@@ -13,7 +13,7 @@ Ext.define('wallet.view.BillPayView',{
 	items:[{
 		xtype: 'form',
 		itemId: 'billPayPanel',
-		title: '<div class="redFontTitle">Money Transer / Bill Pay</div>',
+		title: '<div class="redFontTitle">OnePoint Payment - <span style="font-style:italic;">Money Transfer / Pay Bills</span></div>',
 		width: '75%',
 		autoScroll: true,
 		height: '85%',
@@ -45,8 +45,9 @@ Ext.define('wallet.view.BillPayView',{
 						labelSeparator: '',
 						type: 'nameField',
 						itemId: 'nameField',
-						labelWidth: 15,
-						fieldLabel: 'Hi,',
+						padding: '0 0 0 5',
+						labelWidth: 65,
+						fieldLabel: 'Welcome',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
 						value: ''
@@ -64,8 +65,8 @@ Ext.define('wallet.view.BillPayView',{
 						xtype: 'displayfield',
 						type: 'nameField',
 						itemId: 'balField',
-						labelWidth: 130,
-						fieldLabel: 'Account Balance',
+						labelWidth: 65,
+						fieldLabel: 'Balance',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
 						value: ''
@@ -78,7 +79,7 @@ Ext.define('wallet.view.BillPayView',{
 			type: 'mytool',
 			width: 'auto',
 			renderTpl: [
-				'<img id="" src="res/images/Logout.png" role="presentation" height="15" width="15"/>'
+				'<img id="" src="res/images/Logout.png" role="presentation" height="25" width="25"/>'
 			],
 			handler: function() {
 				Ext.Ajax.request({
@@ -152,6 +153,9 @@ Ext.define('wallet.view.BillPayView',{
 					}]
 				}]
 			},{
+				xtype: 'tbspacer',
+				height: 20				
+			},{
 				xtype: 'container',
 				width: '75%',
 				layout: {
@@ -223,6 +227,7 @@ Ext.define('wallet.view.BillPayView',{
 				},
 				items: [{
 					xtype: 'button',
+					scale: 'medium',
 					width: '20%',
 					itemId: 'billGoBack',
 					text: 'Back'
@@ -232,6 +237,7 @@ Ext.define('wallet.view.BillPayView',{
 				},{
 					xtype: 'button',
 					width: '20%',
+					scale: 'medium',
 					itemId: 'billSubmit',
 					text: 'Submit'
 				}]
@@ -241,7 +247,7 @@ Ext.define('wallet.view.BillPayView',{
 			},{
 				xtype: 'container',
 				width: '75%',
-				height: 20,
+				height: 30,
 				layout: {
 					type: 'vbox',
 					pack: 'center',

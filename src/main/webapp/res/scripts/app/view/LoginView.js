@@ -29,7 +29,7 @@ Ext.define('wallet.view.LoginView',{
 	},{
 		xtype: 'form',
 		itemId: 'loginForm',
-		title: '<div class="redFontTitle">Login</div>',
+		title: '<div class="redFontTitle">OnePoint Payment - <span style="font-style:italic">Login</span></div>',
 		region: 'center',
 		width: '100%',
 		height: '100%',
@@ -48,7 +48,7 @@ Ext.define('wallet.view.LoginView',{
 			},
 			items: [{
 				xtype: 'textfield',
-				fieldLabel: 'Let\'s start by verifying your phone number',
+				fieldLabel: 'Let\'s start by verifying your MDN',
 				labelSeparator: '',
 				labelAlign: 'top',
 				maskRe: /^[0-9\b]+$/,
@@ -136,6 +136,7 @@ Ext.define('wallet.view.LoginView',{
 			items: [{
 				xtype: 'button',
 				width: '20%',
+				disabled: true,
 				scale: 'medium',
 				text: 'OK',
 				itemId: 'okBtn'

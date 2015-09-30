@@ -38,8 +38,9 @@ Ext.define('wallet.view.DecisionView',{
 						labelSeparator: '',
 						type: 'nameField',
 						itemId: 'nameField',
-						labelWidth: 15,
-						fieldLabel: 'Hi,',
+						padding: '0 0 0 5',
+						labelWidth: 65,
+						fieldLabel: 'Welcome',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
 						value: ''
@@ -57,8 +58,8 @@ Ext.define('wallet.view.DecisionView',{
 						xtype: 'displayfield',
 						type: 'balField',
 						itemId: 'balField',
-						labelWidth: 130,
-						fieldLabel: 'Account Balance',
+						labelWidth: 65,
+						fieldLabel: 'Balance',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
 						value: ''
@@ -67,7 +68,7 @@ Ext.define('wallet.view.DecisionView',{
 				
 			}]
 		}],
-		title: '<div class="redFontTitle">Actions</div>',
+		title: '<div class="redFontTitle">OnePoint Payment</div>',
 		autoScroll: true,
 		style: 'overflow-x:hidden;overflow-y:auto;',
 		width: '75%',
@@ -82,7 +83,7 @@ Ext.define('wallet.view.DecisionView',{
 			type: 'mytool',
 			width: 'auto',
 			renderTpl: [
-				'<img id="" src="res/images/Logout.png" role="presentation" height="15" width="15"/>'
+				'<img id="" src="res/images/Logout.png" role="presentation" height="25" width="25"/>'
 			],
 			handler: function() {
 				Ext.Ajax.request({
@@ -96,10 +97,13 @@ Ext.define('wallet.view.DecisionView',{
 				});
 			}
 		}],
+		defaults: {
+			padding: '0 0 0 20',
+		},
 		items: [{
 			xtype: 'container',
-			width: '30%',
-			padding: '0 0 10 0',
+			width: '50%',
+			padding: '0 0 10 20',
 			layout: {
 				type: 'vbox',
 				pack: 'start',
@@ -111,9 +115,11 @@ Ext.define('wallet.view.DecisionView',{
 					type: 'table',
 					columns: 3
 				},
+				itemId: 'loadCashCnt',
+				style: 'cursor:pointer;',
 				items:[{
 						xtype: 'container',
-						html: '<img src="./res/images/Load_Cash.jpg" height="50" width="50"/>'
+						html: '<img src="./res/images/Load_Cash.jpg" height="50" width="50" id="loadCash" style="" />'
 					},{
 						xtype: 'tbspacer',
 						width: 10
@@ -126,8 +132,8 @@ Ext.define('wallet.view.DecisionView',{
 			}]
 		},{
 			xtype: 'container',
-			padding: '0 0 10 0',
-			width: '30%',
+			padding: '0 0 10 20',
+			width: '50%',
 			layout: {
 				type: 'vbox',
 				pack: 'start',
@@ -139,9 +145,11 @@ Ext.define('wallet.view.DecisionView',{
 					type: 'table',
 					columns: 3
 				},
+				itemId: 'addPayeeCnt',
+				style: 'cursor:pointer;',
 				items:[{
 					xtype: 'container',
-					html: '<img src="./res/images/Payee.jpg" height="50" width="50"/>'
+					html: '<img src="./res/images/Payee.jpg" height="50" width="50" id="addPayee" style="cursor:pointer;"/>'
 				},{
 					xtype: 'tbspacer',
 					width: 10
@@ -154,8 +162,8 @@ Ext.define('wallet.view.DecisionView',{
 			}]
 		},{
 			xtype: 'container',
-			padding: '0 0 10 0',
-			width: '30%',
+			padding: '0 0 10 20',
+			width: '50%',
 			layout: {
 				type: 'vbox',
 				pack: 'start',
@@ -167,9 +175,11 @@ Ext.define('wallet.view.DecisionView',{
 					type: 'table',
 					columns: 3
 				},
+				itemId: 'billPayCnt',
+				style: 'cursor:pointer;',
 				items:[{
 					xtype: 'container',
-					html: '<img src="./res/images/Money_Transfer.jpg" height="50" width="50"/>'
+					html: '<img src="./res/images/Money_Transfer.jpg" height="50" width="50" id="billPay" style="cursor:pointer;"/>'
 				},{
 					xtype: 'tbspacer',
 					width: 10
@@ -182,8 +192,8 @@ Ext.define('wallet.view.DecisionView',{
 			}]
 		},{
 			xtype: 'container',
-			padding: '0 0 10 0',
-			width: '30%',
+			padding: '0 0 10 20',
+			width: '50%',
 			layout: {
 				type: 'vbox',
 				pack: 'start',
@@ -195,9 +205,11 @@ Ext.define('wallet.view.DecisionView',{
 					type: 'table',
 					columns: 3
 				},
+				itemId: 'loyaltyCnt',
+				style: 'cursor:pointer;',
 				items:[{
 					xtype: 'container',
-					html: '<img src="./res/images/Loyalty_Offers.jpg" height="50" width="50"/>'
+					html: '<img src="./res/images/Loyalty_Offers.jpg" height="50" width="50" id="loyalty" style="cursor:pointer;"/>'
 				},{
 					xtype: 'tbspacer',
 					width: 10
@@ -205,12 +217,12 @@ Ext.define('wallet.view.DecisionView',{
 					xtype: 'container',
 					height: '100%',
 					width: '100%',
-					html: '<b><span style="cursor:pointer;" id="loyalty">Loyalty Points / Offers</span></b>'
+					html: '<b><span style="cursor:pointer;" id="loyalty">Redeem Points / Offers</span></b>'
 				}]
 			}]
 		},{
 			xtype: 'container',
-			width: '30%',
+			width: '50%',
 			layout: {
 				type: 'vbox',
 				pack: 'start',
@@ -222,9 +234,11 @@ Ext.define('wallet.view.DecisionView',{
 					type: 'table',
 					columns: 3
 				},
+				itemId: 'statementCnt',
+				style: 'cursor:pointer;',
 				items:[{
 					xtype: 'container',
-					html: '<img src="./res/images/statement-icon.png" height="50" width="50"/>'
+					html: '<img src="./res/images/statement-icon.png" height="50" width="50" id="statement" style="cursor:pointer;"/>'
 				},{
 					xtype: 'tbspacer',
 					width: 10

@@ -13,7 +13,7 @@ Ext.define('wallet.view.LoyaltyView',{
 	items:[{
 		xtype: 'form',
 		itemId: 'loyaltyPanel',
-		title: '<div class="redFontTitle">Loyalty</div>',
+		title: '<div class="redFontTitle">OnePoint Payment - <span style="font-style:italic">Redeem Reward Points</span></div>',
 		width: '75%',
 		autoScroll: true,
 		height: '85%',
@@ -45,8 +45,9 @@ Ext.define('wallet.view.LoyaltyView',{
 						labelSeparator: '',
 						type: 'nameField',
 						itemId: 'nameField',
-						labelWidth: 15,
-						fieldLabel: 'Hi,',
+						padding: '0 0 0 5',
+						labelWidth: 65,
+						fieldLabel: 'Welcome',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
 						value: ''
@@ -64,8 +65,8 @@ Ext.define('wallet.view.LoyaltyView',{
 						xtype: 'displayfield',
 						type: 'nameField',
 						itemId: 'balField',
-						labelWidth: 130,
-						fieldLabel: 'Account Balance',
+						labelWidth: 65,
+						fieldLabel: 'Balance',
 						fieldCls: 'whiteLabelBold',
 						labelCls: 'whiteLabel paddingRight',
 						value: ''
@@ -78,7 +79,7 @@ Ext.define('wallet.view.LoyaltyView',{
 			type: 'mytool',
 			width: 'auto',
 			renderTpl: [
-				'<img id="" src="res/images/Logout.png" role="presentation" height="15" width="15"/>'
+				'<img id="" src="res/images/Logout.png" role="presentation" height="25" width="25"/>'
 			],
 			handler: function() {
 				Ext.Ajax.request({
@@ -100,7 +101,7 @@ Ext.define('wallet.view.LoyaltyView',{
 		items: [{
 				xtype: 'container',
 				width: '75%',
-				height: 200,
+				height: 170,
 				padding: '20 20 20 20',
 				layout: {
 					type: 'vbox',
@@ -109,12 +110,17 @@ Ext.define('wallet.view.LoyaltyView',{
 				},
 				items:[{
 					xtype: 'container',
+					padding: '0 0 5 0',
+					html: 'Thanks for using our service. We appreciate your loyalty with reward points.'
+				},{
+					xtype: 'container',
 					style: 'cursor:pointer;',
 					itemId: 'points'
 					
 				},{
 					xtype: 'container',
-					html: '<span style="font-weight:bold;font-style:italic;font-size:10pt;">click on points to encash</span>'
+					padding: '5 0 0 0',
+					html: '<span style="font-weight:bold;font-style:italic;font-size:10pt;">click on the reward points to encash</span>'
 				}]
 			},{
 				xtype: 'container',
@@ -127,6 +133,7 @@ Ext.define('wallet.view.LoyaltyView',{
 				items: [{
 					xtype: 'button',
 					width: '10%',
+					scale: 'medium',
 					itemId: 'loyaltyGoBack',
 					text: 'Back'
 				}]
@@ -145,6 +152,21 @@ Ext.define('wallet.view.LoyaltyView',{
 				itemId: 'result',
 				html: ''
 			},{
+				xtype: 'container',
+				width: '75%',
+				padding: '20 0 0 0',
+				layout: {
+					type: 'vbox',
+					pack: 'start',
+					align: 'left'
+				},
+				items:[{
+					xtype: 'container',
+					itemId: 'offersCnt',
+					layout: 'vbox',
+					width: '100%'
+				}]
+			},{
 				xtype: 'tbspacer',
 				height: 30
 			},{
@@ -160,57 +182,58 @@ Ext.define('wallet.view.LoyaltyView',{
 					xtype: 'fieldcontainer',
 					width: '100%',
 					labelAlign: 'top',
-					fieldLabel: '<span style="font-weight:bold;font-style:italic;font-size:8pt;">Our valuable partners are</span>',
+					fieldLabel: '<span style="font-weight:bold;font-style:italic;font-size:8pt;">Cheer with our valuable partners and get 3x Reward points.</span>',
 					defaults: {
-						padding: '0 10 0 0',
+						padding: 10,
 					},
-					layout: 'hbox',
+					layout: {
+						type: 'hbox',
+						pack: 'center',
+						align: 'middle',
+					},
 					items: [{
 						xtype: 'image',
-						height: 35,
-						width: 115,
+						height: 50,
+						width: 120,
 						src: 'res/images/partners/Macys-logo.png'
 					},{
 						xtype: 'image',
-						height: 35,
-						width: 45,
+						height: 50,
+						width: 65,
 						src: 'res/images/partners/Mcdonalds_logo.png'
 					},{
 						xtype: 'image',
-						height: 35,
+						height: 50,
 						width: 115,
 						src: 'res/images/partners/Papa_Johns.png'
-					},{
+					}]
+				},{
+					xtype: 'fieldcontainer',
+					width: '100%',
+					defaults: {
+						padding: '0 20 0 10',
+					},
+					layout: {
+						type: 'hbox',
+						pack: 'center',
+						align: 'middle',
+					},
+					items: [{
 						xtype: 'image',
-						height: 35,
-						width: 75,
+						height: 50,
+						width: 95,
 						src: 'res/images/partners/Sears_Logo.png'
 					},{
 						xtype: 'image',
-						height: 35,
-						width: 75,
+						height: 50,
+						width: 95,
 						src: 'res/images/partners/Subway_Logo.png'
 					},{
 						xtype: 'image',
-						height: 35,
-						width: 125,
+						height: 40,
+						width: 145,
 						src: 'res/images/partners/Walmart_Logo.png'
 					}]
-				}]
-			},{
-				xtype: 'container',
-				width: '75%',
-				padding: '20 0 0 0',
-				layout: {
-					type: 'vbox',
-					pack: 'start',
-					align: 'left'
-				},
-				items:[{
-					xtype: 'container',
-					itemId: 'offersCnt',
-					layout: 'vbox',
-					width: '100%'
 				}]
 			}]
 	}]

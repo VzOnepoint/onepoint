@@ -13,7 +13,7 @@ Ext.define('wallet.view.AddPayeeView',{
 	items:[{
 		xtype: 'form',
 		itemId: 'addPayeePanel',
-		title: '<div class="redFont">Register Payee</div>',
+		title: '<div class="redFontTitle">Register Payee</div>',
 		width: '75%',
 		autoScroll: true,
 		height: '85%',
@@ -84,7 +84,7 @@ Ext.define('wallet.view.AddPayeeView',{
 					url: baseOnePointURL+'/account/logout',
 					success: function(response) {
 						var response = Ext.decode(response.responseText);
-						if (response.errorCode === '0') {
+						if (response.errorCode === 0) {
 							window.location.href = 'index.html';
 						}						
 					}
@@ -108,6 +108,7 @@ Ext.define('wallet.view.AddPayeeView',{
 					xtype: 'radiofield',
 					name: 'typeOfBill',
 					itemId: 'toBillers',
+					cls: 'labelBold',
 					boxLabel: 'Add Beneficiary'
 				}]
 			},{
@@ -128,6 +129,8 @@ Ext.define('wallet.view.AddPayeeView',{
 				},{
 					xtype: 'textfield',
 					maskRe: /^[0-9\b]+$/,
+					enforceMaxLength: true,
+					maxLength: 10,
 					name: 'accountNumber',
 					fieldLabel: 'MDN'
 				}]
@@ -143,6 +146,7 @@ Ext.define('wallet.view.AddPayeeView',{
 					xtype: 'radiofield',
 					name: 'typeOfBill',
 					itemId: 'toAccount',
+					cls: 'labelBold',
 					boxLabel: 'Add Billers'
 				}]
 			},{
@@ -159,6 +163,8 @@ Ext.define('wallet.view.AddPayeeView',{
 				items: [{
 					xtype: 'textfield',
 					maskRe: /^[0-9\b]+$/,
+					enforceMaxLength: true,
+					maxLength: 20,
 					itemId: 'actNumber',
 					fieldLabel: 'Account No'
 				},{
@@ -181,13 +187,22 @@ Ext.define('wallet.view.AddPayeeView',{
 						store: new Ext.data.Store({
 							fields: ['displayField', 'valueField'],
 							data:[{
-								'displayField': 'Athena',
-								'valueField': 'Athena'
+								'displayField': 'Aetna',
+								'valueField': 'Aetna'
+							},{
+								'displayField': 'United Health Group',
+								'valueField': 'United Health Group'
+							},{
+								'displayField': 'Cigna',
+								'valueField': 'Cigna'
+							},{
+								'displayField': 'Humana',
+								'valueField': 'Humana'
 							}]
 						}),
 						displayField: 'displayField',
 						valueField: 'valueField',
-						value: 'Athena'
+						value: 'Aetna'
 					}]
 				}]
 			},{
@@ -204,9 +219,10 @@ Ext.define('wallet.view.AddPayeeView',{
 				items: [{
 					xtype: 'fieldcontainer',
 					defaultType: 'checkboxfield',
+					cls: 'labelBold',
 					layout: 'hbox',
 					items:[{
-						boxLabel: 'Auto Pay'
+						boxLabel: 'Auto Pay',
 					}]
 				}]
 			},{

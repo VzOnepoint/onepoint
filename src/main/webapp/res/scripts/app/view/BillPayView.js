@@ -13,7 +13,7 @@ Ext.define('wallet.view.BillPayView',{
 	items:[{
 		xtype: 'form',
 		itemId: 'billPayPanel',
-		title: '<div class="redFont">Money Transer / Bill Pay</div>',
+		title: '<div class="redFontTitle">Money Transer / Bill Pay</div>',
 		width: '75%',
 		autoScroll: true,
 		height: '85%',
@@ -81,7 +81,15 @@ Ext.define('wallet.view.BillPayView',{
 				'<img id="" src="res/images/Logout.png" role="presentation" height="15" width="15"/>'
 			],
 			handler: function() {
-				window.location.href = 'index.html';
+				Ext.Ajax.request({
+					url: baseOnePointURL+'/account/logout',
+					success: function(response) {
+						var response = Ext.decode(response.responseText);
+						if (response.errorCode === 0) {
+							window.location.href = 'index.html';
+						}						
+					}
+				});
 			}
 		}],
 		layout: {
@@ -101,6 +109,7 @@ Ext.define('wallet.view.BillPayView',{
 					xtype: 'radiofield',
 					name: 'billRadio',
 					itemId: 'payeeRadio',
+					cls: 'labelBold',
 					boxLabel: 'Transfer to Payee'
 				}]
 			},{
@@ -154,6 +163,7 @@ Ext.define('wallet.view.BillPayView',{
 					xtype: 'radiofield',
 					name: 'billRadio',
 					itemId: 'billerRadio',
+					cls: 'labelBold',
 					boxLabel: 'Transfer to Billers'
 				}]
 			},{

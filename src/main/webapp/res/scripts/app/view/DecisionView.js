@@ -67,7 +67,7 @@ Ext.define('wallet.view.DecisionView',{
 				
 			}]
 		}],
-		title: '<div class="redFont">Actions</div>',
+		title: '<div class="redFontTitle">Actions</div>',
 		autoScroll: true,
 		style: 'overflow-x:hidden;overflow-y:auto;',
 		width: '75%',
@@ -89,7 +89,7 @@ Ext.define('wallet.view.DecisionView',{
 					url: baseOnePointURL+'/account/logout',
 					success: function(response) {
 						var response = Ext.decode(response.responseText);
-						if (response.errorCode === '0') {
+						if (response.errorCode === 0) {
 							window.location.href = 'index.html';
 						}						
 					}
@@ -224,7 +224,7 @@ Ext.define('wallet.view.DecisionView',{
 				},
 				items:[{
 					xtype: 'container',
-					html: '<img src="./res/images/Loyalty_Offers.jpg" height="50" width="50"/>'
+					html: '<img src="./res/images/statement-icon.png" height="50" width="50"/>'
 				},{
 					xtype: 'tbspacer',
 					width: 10

@@ -130,10 +130,14 @@ Ext.define('wallet.controller.VZWalletController',{
 											});
 										}
 									});
-									me.getBillpayview().down('[itemId=toPayee]').getStore().loadRawData(payeeArr);
-									me.getBillpayview().down('[itemId=toPayee]').setValue(payeeArr[0]['id']);
-									me.getBillpayview().down('[itemId=toBiller]').getStore().loadRawData(billersArr);
-									me.getBillpayview().down('[itemId=toBiller]').setValue(billersArr[0]['id']);
+									if (!Ext.isEmpty(payeeArr)) {
+										me.getBillpayview().down('[itemId=toPayee]').getStore().loadRawData(payeeArr);
+										me.getBillpayview().down('[itemId=toPayee]').setValue(payeeArr[0]['id']);
+									}
+									if (!Ext.isEmpty(billersArr)) {
+										me.getBillpayview().down('[itemId=toBiller]').getStore().loadRawData(billersArr);
+										me.getBillpayview().down('[itemId=toBiller]').setValue(billersArr[0]['id']);
+									}
 									me.getBillpayview().show();
 								}
 							}
@@ -146,6 +150,7 @@ Ext.define('wallet.controller.VZWalletController',{
 						this.getLoyaltyview().down('[itemId=loyaltyPanel]').getForm().reset();
 						this.getLoyaltyview().down('[itemId=nameField]').setValue(userName);
 						this.getLoyaltyview().down('[itemId=balField]').setValue(balAmountCheck());
+						this.getLoyaltyview().down('[itemId=result]').update('');
 						Ext.Ajax.request({
 							url: baseOnePointURL+'/banking/getLoyaltyBalance',
 							async: false,
@@ -159,7 +164,7 @@ Ext.define('wallet.controller.VZWalletController',{
 								console.log('totTalResponseText ',totTalResponseText);
 								var resp = Ext.decode(totTalResponseText);
 								if (resp.errorCode === 0) {
-									me.getLoyaltyview().down('[itemId=points]').setValue(resp.loyalty.balance);
+									me.getLoyaltyview().down('[itemId=points]').update('<div class="pointsRadius" style="height:100%;width:100%;"><div class="yellowFont60">'+resp.loyalty.balance+'</div></div>');
 								}
 							}
 						})
@@ -298,25 +303,39 @@ Ext.define('wallet.controller.VZWalletController',{
 					if (value === 'Insurance') {
 						sectorStore.loadRawData([
 						{
-							'valueField': 'Athena',
-							'displayField': 'Athena'
+							'displayField': 'Aetna',
+							'valueField': 'Aetna'
+						},{
+							'displayField': 'United Health Group',
+							'valueField': 'United Health Group'
+						},{
+							'displayField': 'Cigna',
+							'valueField': 'Cigna'
+						},{
+							'displayField': 'Humana',
+							'valueField': 'Humana'
 						}]);
 						sectorCombo.setValue('Athena');
 					} else if (value === 'Electricity') {
 						sectorStore.loadRawData([{
-							'valueField': 'E.B',
-							'displayField': 'E.B'
+							'valueField': 'Alabama Power',
+							'displayField': 'Alabama Power'
+						},{
+							'valueField': 'Salt River Power',
+							'displayField': 'Salt River Power'
+						},{
+							'valueField': 'Ampit Energy',
+							'displayField': 'Ampit Energy'
+						},{
+							'valueField': 'Pacific Corp',
+							'displayField': 'Pacific Corp'
 						}]);
-						sectorCombo.setValue('E.B');
+						sectorCombo.setValue('Alabama Power');
 					} else if (value === 'Telephone') {
 						sectorStore.loadRawData([{
 							'valueField': 'Verizon',
 							'displayField': 'Verizon'
-						},
-						{
-							'valueField': 'Verizon FIOS',
-							'displayField': 'Verizon FIOS'
-						},{
+						}, {
 							'valueField': 'AT&T',
 							'displayField': 'AT&T'
 						},{
@@ -336,6 +355,12 @@ Ext.define('wallet.controller.VZWalletController',{
 					if (this.getBillpayview().down('[itemId=billPayPanel]').getForm().findField('billRadio').getValue()) {
 						accountId = this.getBillpayview().down('[itemId=toPayee]').getValue();
 						payeeAmount = this.getBillpayview().down('[itemId=payeeAmount]').getValue();
+						if (Ext.isEmpty(payeeAmount)) {
+							Ext.Msg.alert('One Point', 'Please enter valid amount.', function() {
+								me.getBillpayview().down('[itemId=billPayeeResult]').update('');
+							});
+							return;
+						}
 						Ext.Ajax.request({
 							url: baseOnePointURL+'/banking/transfer/'+accountId+'/'+payeeAmount,
 							method: 'POST',
@@ -356,6 +381,12 @@ Ext.define('wallet.controller.VZWalletController',{
 						accountId = this.getBillpayview().down('[itemId=toBiller]').getValue();
 						var billerName = this.getBillpayview().down('[itemId=toBiller]').getRawValue();
 						var billAmount = this.getBillpayview().down('[itemId=billAmount]').getValue();
+						if (Ext.isEmpty(billAmount)) {
+							Ext.Msg.alert('One Point', 'Please enter valid amount.', function() {
+								me.getBillpayview().down('[itemId=billPayeeResult]').update('');
+							});
+							return;
+						}
 						var jsonData = {
 							'id': accountId,
 							'payeeName': billerName,
@@ -425,9 +456,9 @@ Ext.define('wallet.controller.VZWalletController',{
 				}
 			},
 			'loyaltyview': {
-				'afterrender': function(view) {
+				'show': function(view) {
 					var me = this, offersCnt = me.getLoyaltyview().down('[itemId=offersCnt]');
-					
+					offersCnt.removeAll();
 					Ext.Ajax.request({
 						url: baseOnePointURL+'/offers/get',
 						success: function(response) {
@@ -446,7 +477,23 @@ Ext.define('wallet.controller.VZWalletController',{
 							});
 							offersCnt.doLayout();
 						}
-					})
+					});
+				},
+				'afterrender': function(view) {
+					view.down('[itemId=points]').getEl().on('click', function() {
+						var me = this;
+						Ext.Ajax.request({
+							url: baseOnePointURL+'/banking/encashLoyaltyPoints',
+							success: function(response) {
+								var resp = Ext.decode(response.responseText);
+								if (resp.errorCode === 0) {
+									Ext.Msg.alert('One Point', 'Your points has been encashed.')
+								} else {
+									me.getLoyaltyview().down('[itemId=result]').update('<div class="redFont">'+resp.errorMessage+'</div>');
+								}
+							}
+						});
+					}, this);
 				}
 			}
 		});

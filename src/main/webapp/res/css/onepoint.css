@@ -1,8 +1,11 @@
-.redFont{color:#CD040C;font-weight:bold;}
-.greenFont{color:green;font-weight:bold;}
-.greenFont12{color:green;font-weight:bold;font-size:30pt;}
+.redFontTitle{color:#CD040C;font-weight:bold;font-size:12pt;}
+.redFont{color:#CD040C;font-weight:bold;font-size:15pt;}
+.greenFont{color:green;font-weight:bold;font-size:15pt;}
+.yellowFont60{color:#797943;font-weight:bold;font-size:60pt;}
 .whiteLabel{color:#FFFFFF;font-size:12pt;}
 .paddingRight{padding-right:10px !important;}
 .whiteLabelBold{color:#FFFFFF;font-weight:bold;font-size:12pt;}
+.labelBold{font-weight:bold;font-size:12pt;}
 .offersFont{font-size:20px;font-family:arial, sans-serif;font-weight:bold;}
 .offersDescFont{font-family:arial, sans-serif !important;font-style:italic !important;}
+.pointsRadius{border: 2px solid #754821;padding: 30px 30px 30px 30px;background: #EAD1BB;border-radius: 100px;}

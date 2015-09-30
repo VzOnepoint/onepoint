@@ -13,7 +13,7 @@ Ext.define('wallet.view.StatementView',{
 	items:[{
 		xtype: 'form',
 		itemId: 'stmtPanel',
-		title: '<div class="redFont">Loyalty</div>',
+		title: '<div class="redFontTitle">Loyalty</div>',
 		width: '75%',
 		autoScroll: true,
 		height: '85%',
@@ -85,7 +85,7 @@ Ext.define('wallet.view.StatementView',{
 					url: baseOnePointURL+'/account/logout',
 					success: function(response) {
 						var response = Ext.decode(response.responseText);
-						if (response.errorCode === '0') {
+						if (response.errorCode === 0) {
 							window.location.href = 'index.html';
 						}						
 					}
@@ -109,9 +109,44 @@ Ext.define('wallet.view.StatementView',{
 					xtype: 'grid',
 					itemId: 'stmtGrid',
 					width: '100%',
-					height: '40%',
+					height: 300,
 					autoScroll: true,
-					title: 'Statements',
+					tools:[{
+						type:'refresh',
+						tooltip: 'Refresh the statement',
+						// hidden:true,
+						handler: function(event, toolEl, panelHeader) {
+							// refresh logic
+						}
+					},
+					{
+						type:'help',
+						tooltip: 'Get Help',
+						callback: function(panel, tool, event) {
+							// show help here
+						}
+					},{
+						type:'custom',
+						tooltip: 'Download PDF',
+						width: 'auto',
+						renderTpl: [
+							'<img id="" src="res/images/pdf-icon.png" role="presentation" height="16" width="16"/>'
+						],
+						callback: function(panel, tool, event) {
+							// show help here
+						}
+					},{
+						type:'custom',
+						tooltip: 'Download Excel',
+						width: 'auto',
+						renderTpl: [
+							'<img id="" src="res/images/excel-icon.png" role="presentation" height="16" width="16"/>'
+						],
+						callback: function(panel, tool, event) {
+							// show help here
+						}
+					}],
+					title: '<div style="font-weight:bold;">Statements</div>',
 					store: new Ext.data.Store({
 						fields: ['payeeName', 'description', 'amount', 'date', 'debit', 'debit']
 					}),
@@ -120,19 +155,24 @@ Ext.define('wallet.view.StatementView',{
 						text: 'Name',
 						menuDisabled: true,
 						sortable: false,
-						flex: 1
+						flex: 2
 					},{
 						dataIndex: 'description',
 						text: 'Description',
 						menuDisabled: true,
 						sortable: false,
-						flex: 1
+						flex: 3
 					},{
 						dataIndex: 'date',
 						text: 'Date',
 						menuDisabled: true,
 						sortable: false,
-						flex: 1
+						flex: 2,
+						renderer: function(val){
+							var dt = Ext.Date.parse(val, 'Y-m-d');
+							var formatDt = Ext.Date.format(dt, 'm/d/Y');
+							return '<div>'+formatDt+'</div>';
+						}
 					},{
 						dataIndex: 'debit',
 						text: 'Debit',
@@ -140,10 +180,12 @@ Ext.define('wallet.view.StatementView',{
 						sortable: false,
 						flex: 1,
 						renderer: function(val, metaData, record, rowIdx, colIdx, store, view) {
+							var amount = Ext.util.Format.currency(record.get('amount'), '',1);
 							if (val) {
-								return '<div style="border:1px solid green;">'+record.get('amount')+'</div>';
+								metaData.tdStyle = 'background-color:pink;font-weight:bold;';
+								return '<div>'+amount+'</div>';
 							} else {
-								return '<div>&nbsp;</div>';
+								return '<div></div>';
 							}
 						}
 					},{
@@ -153,14 +195,19 @@ Ext.define('wallet.view.StatementView',{
 						sortable: false,
 						flex: 1,
 						renderer: function(val, metaData, record, rowIdx, colIdx, store, view) {
+							var amount = Ext.util.Format.currency(record.get('amount'), '',1);
 							if (!val) {
-								return '<div  style="border:1px solid red;">'+record.get('amount')+'</div>';
+								metaData.tdStyle = 'background-color:orange;font-weight:bold;';
+								return '<div>'+amount+'</div>';
 							} else {
-								return '<div>&nbsp;</div>';
+								return '<div></div>';
 							}
 						}
 					}]
 				}]
+			},{
+				xtype: 'tbspacer',
+				height: 20
 			},{
 				xtype: 'container',
 				width: '100%',

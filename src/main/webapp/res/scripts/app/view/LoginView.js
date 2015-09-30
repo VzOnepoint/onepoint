@@ -29,7 +29,7 @@ Ext.define('wallet.view.LoginView',{
 	},{
 		xtype: 'form',
 		itemId: 'loginForm',
-		title: '<div class="redFont">Login</div>',
+		title: '<div class="redFontTitle">Login</div>',
 		region: 'center',
 		width: '100%',
 		height: '100%',

@@ -13,7 +13,7 @@ Ext.define('wallet.view.CashView',{
 	items:[{
 		xtype: 'form',
 		itemId: 'cashPanel',
-		title: '<div class="redFont">Payments</div>',
+		title: '<div class="redFontTitle">Payments</div>',
 		width: '75%',
 		autoScroll: true,
 		height: '85%',
@@ -90,7 +90,7 @@ Ext.define('wallet.view.CashView',{
 					url: baseOnePointURL+'/account/logout',
 					success: function(response) {
 						var response = Ext.decode(response.responseText);
-						if (response.errorCode === '0') {
+						if (response.errorCode === 0) {
 							window.location.href = 'index.html';
 						}						
 					}
@@ -108,6 +108,7 @@ Ext.define('wallet.view.CashView',{
 				items: [{
 					xtype: 'radiofield',
 					name: 'cashRadio',
+					cls:  'labelBold',
 					itemId: 'creditRadio',
 					boxLabel: 'Credit Card'
 				}]
@@ -173,6 +174,7 @@ Ext.define('wallet.view.CashView',{
 				items: [{
 					xtype: 'radiofield',
 					name: 'cashRadio',
+					cls:  'labelBold',
 					itemId: 'debitRadio',
 					boxLabel: 'Debit Card'
 				}]
@@ -238,6 +240,7 @@ Ext.define('wallet.view.CashView',{
 				items: [{
 					xtype: 'radiofield',
 					name: 'cashRadio',
+					cls:  'labelBold',
 					itemId: 'netBankingRadio',
 					boxLabel: 'Net Banking'
 				}]
@@ -276,9 +279,10 @@ Ext.define('wallet.view.CashView',{
 				items: [{
 					xtype: 'textfield',
 					name: 'loadAmount',
+					labelCls:  'labelBold',
 					itemId: 'loadAmount',
 					maskRe: /^[0-9\b]+$/,
-					labelWidth: 120,
+					labelWidth: 150,
 					fieldLabel: 'Enter Amount ($)'
 				}]
 			},{

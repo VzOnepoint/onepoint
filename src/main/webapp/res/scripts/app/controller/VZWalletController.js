@@ -205,6 +205,10 @@ Ext.define('wallet.controller.VZWalletController',{
 							}
 						})
 					}, this);
+				},
+				'show': function() {
+					this.getDecisionview().down('[itemId=nameField]').setValue(userName);
+					this.getDecisionview().down('[itemId=balField]').setValue(balAmountCheck());
 				}
 			},
 			'button[itemId=cashGoBack]': {

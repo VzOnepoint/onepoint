@@ -662,6 +662,7 @@ Ext.define('wallet.controller.VZWalletController',{
 		this.getCashview().hide();
 		this.getBillpayview().hide();
 		this.getLoyaltyview().hide();
+		this.getStatementview().hide();
 	},
 	hideAllPayments: function() {
 		this.getCashview().down('[itemId=creditCardCnt]').hide();

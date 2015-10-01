@@ -9,3 +9,5 @@
 .offersFont{font-size:20px;font-family:arial, sans-serif;font-weight:bold;}
 .offersDescFont{font-family:arial, sans-serif !important;font-style:italic !important;}
 .pointsRadius{border: 2px solid #754821;padding: 30px 30px 30px 30px;background: #EAD1BB;border-radius: 100px;}
+.calibriFontBold{font-family:calibri;font-size:10pt;font-weight:bold;font-style:italic;}
+.calibriFont{font-family:calibri;font-size:9pt;font-style:italic;}

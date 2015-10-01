@@ -101,6 +101,7 @@ Ext.define('wallet.view.StatementView',{
 		items: [{
 				xtype: 'container',
 				width: '75%',
+				hidden: true,
 				layout: {
 					type: 'vbox',
 					pack: 'center',
@@ -108,7 +109,7 @@ Ext.define('wallet.view.StatementView',{
 				},
 				items: [{
 					xtype: 'grid',
-					itemId: 'stmtGrid',
+					//itemId: 'stmtGrid',
 					width: '100%',
 					height: 300,
 					autoScroll: true,
@@ -206,6 +207,55 @@ Ext.define('wallet.view.StatementView',{
 						}
 					}]
 				}]
+			},{
+				xtype: 'tbspacer',
+				height: 20
+			},{
+				xtype: 'panel',
+				width: '50%',
+				height: 300,
+				tools:[{
+					type:'refresh',
+					tooltip: 'Refresh the statement',
+					// hidden:true,
+					handler: function(event, toolEl, panelHeader) {
+						// refresh logic
+					}
+				},
+				{
+					type:'help',
+					tooltip: 'Get Help',
+					callback: function(panel, tool, event) {
+						// show help here
+					}
+				},{
+					type:'custom',
+					tooltip: 'Download PDF',
+					width: 'auto',
+					renderTpl: [
+						'<img id="" src="res/images/pdf-icon.png" role="presentation" height="16" width="16"/>'
+					],
+					callback: function(panel, tool, event) {
+						// show help here
+					}
+				},{
+					type:'custom',
+					tooltip: 'Download Excel',
+					width: 'auto',
+					renderTpl: [
+						'<img id="" src="res/images/excel-icon.png" role="presentation" height="16" width="16"/>'
+					],
+					callback: function(panel, tool, event) {
+						// show help here
+					}
+				}],
+				title: '<div style="font-weight:bold;">Statements</div>',
+				layout: {
+					type: 'vbox',
+					pack: 'center',
+					align: 'middle'
+				},
+				itemId: 'stmtGrid'
 			},{
 				xtype: 'tbspacer',
 				height: 20

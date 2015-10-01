@@ -200,7 +200,19 @@ Ext.define('wallet.controller.VZWalletController',{
 							success: function(response) {
 								var resp = Ext.decode(response.responseText);
 								if (resp.errorCode === 0) {
-									me.getStatementview().down('[itemId=stmtGrid]').getStore().loadData(resp.transactions);
+									//me.getStatementview().down('[itemId=stmtGrid]').getStore().loadData(resp.transactions);
+									var genTableTpl = '';
+									
+									Ext.iterate(resp.transactions, function(item, index) {
+										var colorFlag = (index%2 === 0) ? '#FFFFFF' : '#E4E4E1';
+										var dt = Ext.Date.parse(item['date'], 'Y-m-d');
+										var formatDt = Ext.Date.format(dt, 'm/d/Y');
+										var payeeNameDesc = item['payeeName']+'|'+ (Ext.isEmpty(item['description'])? '' : item['description']);
+										var isDebit = (item['debit']) ? 'green' : 'black'; 
+										
+										genTableTpl += '<div><table width="100%" border="0" style="background-color:'+colorFlag+';height:25px;"><tr height="10"><td><div class="calibriFontBold">'+formatDt+'</div></td><td align="right" valign="middel" height="10"><div class="calibriFontBold" style="color:'+isDebit+';">$'+item['amount']+'</div></td></tr><tr height="10"><td colspan="2"><div class="calibriFont">'+payeeNameDesc+'</div></td></tr></table></div>';
+									});
+									me.getStatementview().down('[itemId=stmtGrid]').update('<div style="height:250px;overflow-y:auto;">'+genTableTpl+'</div>');
 								}
 							}
 						})

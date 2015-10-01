@@ -28,6 +28,7 @@ Ext.application({
 	requires: ['wallet.view.LoginView', 'wallet.view.DecisionView', 'wallet.view.CashView', 'wallet.view.AddPayeeView', 'wallet.view.BillPayView', 'wallet.view.LoyaltyView', 'wallet.view.StatementView'],
 	controllers: ['VZWalletController'],
 	launch: function() {
+		Ext.Ajax.disableCaching = true;
 		Ext.create('Ext.container.Viewport',{
 			renderTo: Ext.getBody(),
 			id: 'viewport',

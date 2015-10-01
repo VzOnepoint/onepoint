@@ -101,7 +101,7 @@ Ext.define('wallet.view.LoginView',{
 				name: 'password',
 				enforceMaxLength: true,
 				maxLength: 6,
-				emptyText: 'Enter 10-digit mobile number'
+				emptyText: 'PIN Number'
 			}]
 		},{
 			xtype: 'container',
@@ -123,7 +123,7 @@ Ext.define('wallet.view.LoginView',{
 				itemId: 'rePintText',
 				enforceMaxLength: true,
 				maxLength: 6,
-				emptyText: 'Enter 10-digit mobile number'
+				emptyText: 'PIN Number'
 			}]
 		},{
 			xtype: 'container',

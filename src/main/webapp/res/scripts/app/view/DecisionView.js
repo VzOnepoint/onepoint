@@ -132,6 +132,36 @@ Ext.define('wallet.view.DecisionView',{
 			}]
 		},{
 			xtype: 'container',
+			width: '60%',
+			padding: '0 0 10 20',
+			layout: {
+				type: 'vbox',
+				pack: 'start',
+				align: 'left'
+			},
+			items: [{
+				xtype: 'container',
+				layout:{
+					type: 'table',
+					columns: 3
+				},
+				itemId: 'nfcCnt',
+				style: 'cursor:pointer;',
+				items:[{
+						xtype: 'container',
+						html: '<img src="./res/images/NFC_Icon.png" height="50" width="55" id="nfc" style="" />'
+					},{
+						xtype: 'tbspacer',
+						width: 10
+					},{
+						xtype: 'container',
+						height: '100%',
+						width: '100%',
+						html: '<b><span style="cursor:pointer;" id="nfc">Pay By NFC / IOT</span></b>'
+				}]
+			}]
+		},{
+			xtype: 'container',
 			padding: '0 0 10 20',
 			width: '60%',
 			layout: {

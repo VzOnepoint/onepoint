@@ -6,6 +6,7 @@ sessionExpireCallBack = function() {
 		window.location.href = 'index.html';
 	});
 };
+globalPayeeId = '';
 balAmountCheck = function() {
 	var balance = 0.0;
 	Ext.Ajax.request({
@@ -25,7 +26,7 @@ balAmountCheck = function() {
 Ext.application({
 	name: 'wallet',
 	appFolder: 'res/scripts/app',
-	requires: ['wallet.view.LoginView', 'wallet.view.DecisionView', 'wallet.view.CashView', 'wallet.view.AddPayeeView', 'wallet.view.BillPayView', 'wallet.view.LoyaltyView', 'wallet.view.StatementView'],
+	requires: ['wallet.view.LoginView', 'wallet.view.DecisionView', 'wallet.view.CashView', 'wallet.view.AddPayeeView', 'wallet.view.BillPayView', 'wallet.view.LoyaltyView', 'wallet.view.StatementView', 'wallet.view.NFCView'],
 	controllers: ['VZWalletController'],
 	launch: function() {
 		Ext.Ajax.disableCaching = true;
@@ -55,6 +56,9 @@ Ext.application({
 				hidden: true
 			},{
 				xtype: 'statementview',
+				hidden: true
+			},{
+				xtype: 'nfcview',
 				hidden: true
 			}]
 		});

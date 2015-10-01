@@ -284,6 +284,25 @@ Ext.define('wallet.view.CashView',{
 					align: 'left'
 				},
 				items: [{
+					xtype: 'fieldcontainer',
+					defaultType: 'checkboxfield',
+					layout: 'hbox',
+					items:[{
+						boxLabel: 'Make it as default payment option',
+					}]
+				}]
+			},{
+				xtype: 'tbspacer',
+				height: 20
+			},{
+				xtype: 'container',
+				width: '75%',
+				layout: {
+					type: 'vbox',
+					pack: 'start',
+					align: 'left'
+				},
+				items: [{
 					xtype: 'textfield',
 					name: 'loadAmount',
 					labelCls:  'labelBold',

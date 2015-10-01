@@ -3,7 +3,7 @@
  */
 Ext.define('wallet.controller.VZWalletController',{
 	extend: 'Ext.app.Controller',
-	views: ['LoginView', 'DecisionView', 'CashView','AddPayeeView', 'BillPayView', 'LoyaltyView', 'StatementView'],
+	views: ['LoginView', 'DecisionView', 'CashView','AddPayeeView', 'BillPayView', 'LoyaltyView', 'StatementView', 'NFCView'],
 	refs:[{
 		ref: 'loginview',
 		selector: 'loginview'
@@ -31,6 +31,10 @@ Ext.define('wallet.controller.VZWalletController',{
 	},{
 		ref: 'statementview',
 		selector: 'statementview'
+		
+	},{
+		ref: 'nfcview',
+		selector: 'nfcview'
 		
 	}],
 	init: function() {
@@ -109,6 +113,31 @@ Ext.define('wallet.controller.VZWalletController',{
 						this.getCashview().down('[itemId=debitCardName]').setValue(userName);
 						Ext.iterate(this.getCashview().down('[itemId=cashPanel]').query('container[defaultShow=false]'), function(cnt) {
 							cnt.hide();
+						});
+					}, this);
+					
+					view.down('[itemId=nfcCnt]').getEl().on('click', function() {
+						var me = this;
+						this.hideAllViews();
+						this.getNfcview().show();
+						this.getNfcview().down('[itemId=nfcPanel]').getForm().reset();
+						this.getNfcview().down('[itemId=nameField]').setValue(userName);
+						this.getNfcview().down('[itemId=balField]').setValue(balAmountCheck());
+						this.getNfcview().down('[itemId=nfcResult]').update('');
+						Ext.Ajax.request({
+							url: baseOnePointURL+'/banking/getPayees',
+							async: false,
+							success: function(response) {
+								var resp = Ext.decode(response.responseText);
+								var payeeArr = [], billersArr = [];
+								if (resp.errorCode === 0) {
+									me.getBillpayview().down('[itemId=toPayeeCnt]').hide();						
+									me.getBillpayview().down('[itemId=toBillCnt]').hide();
+									if (!Ext.isEmpty(resp.payees)) {
+										globalPayeeId = resp.payees[0]['id'];
+									}
+								}
+							}
 						});
 					}, this);
 					view.down('[itemId=addPayeeCnt]').getEl().on('click', function() {
@@ -229,6 +258,63 @@ Ext.define('wallet.controller.VZWalletController',{
 					this.getDecisionview().show();
 				}
 			},
+			'nfcview button[itemId=nfcGoBack]': {
+				'click': function(){
+					this.hideAllViews();
+					this.getDecisionview().show();
+				}
+			},
+			'nfcview button[itemId=nfcApprove]': {
+				'click': function() {
+					var me = this, myWindow = new Ext.window.Window({
+						height: 200,
+						width: 400,
+						closable: false,
+						modal: true,
+						layout: {
+							type: 'vbox',
+							pack: 'center',
+							align: 'middle',
+						},
+						items: [{
+							xtype: 'container',
+							items: [{  
+								xtype: 'image',
+								src: './res/images/Touch_ID.png'
+							},{
+								xtype: 'container',
+								html: 'Scanning finger print...'
+							}]
+						}]
+					});
+					if (Ext.isEmpty(globalPayeeId)) {
+						Ext.Msg.alert('OnePoint Payment', 'No NFC / IOT device detected.', function() {
+							me.getCashview().down('[itemId=cashResult]').update('');
+						});
+						return;
+					} else {
+						myWindow.show();
+						Ext.defer(function() {
+							globalPayeeId = '56';
+							myWindow.close();
+							Ext.Ajax.request({
+								url: baseOnePointURL+'/banking/transfer/'+globalPayeeId+'/1',
+								method: 'POST',
+								async: false,
+								success: function(response) {
+									var resp = Ext.decode(response.responseText);
+									if (resp.errorCode === 0) {
+										me.getNfcview().down('[itemId=balField]').setValue(balAmountCheck());
+										me.getNfcview().down('[itemId=nfcResult]').update('<div class="greenFont">Your amount has been transferred. Thanks for using our service.</div>');
+									} else {
+										me.getNfcview().down('[itemId=nfcResult]').update('<div class="redFont">'+resp.errorMessage+'</div>');
+									}
+								}
+							});
+						}, 3000, this);
+					}
+				}
+			},
 			'cashview radiofield': {
 				'change': function(field, newVal, oldVal) {
 					if (newVal) {
@@ -256,10 +342,11 @@ Ext.define('wallet.controller.VZWalletController',{
 					var amount = btn.up('cashview').down('[itemId=loadAmount]').getValue(), me = this;
 					if (Ext.isEmpty(amount)) {
 						Ext.Msg.alert('OnePoint Payment', 'Please enter valid amount.', function() {
-								me.getCashview().down('[itemId=cashResult]').update('');
-							});
-							return;
+							me.getCashview().down('[itemId=cashResult]').update('');
+						});
+						return;
 					}
+					
 					Ext.Ajax.request({
 						url: baseOnePointURL+'/banking/loadCash/'+amount,
 						async: false,
@@ -390,9 +477,29 @@ Ext.define('wallet.controller.VZWalletController',{
 			},
 			'billpayview button[itemId=billSubmit]': {
 				'click': function(btn) {
-					var me = this, accountId, payeeAmount;
+					var me = this, accountId, payeeAmount, myWindow = new Ext.window.Window({
+						height: 200,
+						width: 400,
+						closable: false,
+						modal: true,
+						layout: {
+							type: 'vbox',
+							pack: 'center',
+							align: 'middle',
+						},
+						items: [{
+							xtype: 'container',
+							items: [{  
+								xtype: 'image',
+								src: './res/images/Touch_ID.png'
+							},{
+								xtype: 'container',
+								html: 'Scanning finger print...'
+							}]
+						}]
+					});
+
 					if (this.getBillpayview().down('[itemId=billPayPanel]').getForm().findField('billRadio').getValue()) {
-						accountId = this.getBillpayview().down('[itemId=toPayee]').getValue();
 						payeeAmount = this.getBillpayview().down('[itemId=payeeAmount]').getValue();
 						if (Ext.isEmpty(payeeAmount)) {
 							Ext.Msg.alert('OnePoint Payment', 'Please enter valid amount.', function() {
@@ -400,23 +507,7 @@ Ext.define('wallet.controller.VZWalletController',{
 							});
 							return;
 						}
-						Ext.Ajax.request({
-							url: baseOnePointURL+'/banking/transfer/'+accountId+'/'+payeeAmount,
-							method: 'POST',
-							async: false,
-							success: function(response) {
-								var resp = Ext.decode(response.responseText);
-								if (resp.errorCode === 0) {
-									me.getBillpayview().down('[itemId=balField]').setValue(balAmountCheck());
-									me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="greenFont">Your amount has been transferred. Thanks for using our service.</div>');
-								} else {
-									me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="redFont">'+resp.errorMessage+'</div>');
-								}
-							}
-						});
-					} else {
-						accountId = this.getBillpayview().down('[itemId=toBiller]').getValue();
-						var billerName = this.getBillpayview().down('[itemId=toBiller]').getRawValue();
+					} else if (!this.getBillpayview().down('[itemId=billPayPanel]').getForm().findField('billRadio').getValue()) {
 						var billAmount = this.getBillpayview().down('[itemId=billAmount]').getValue();
 						if (Ext.isEmpty(billAmount)) {
 							Ext.Msg.alert('OnePoint Payment', 'Please enter valid amount.', function() {
@@ -424,28 +515,55 @@ Ext.define('wallet.controller.VZWalletController',{
 							});
 							return;
 						}
-						var jsonData = {
-							'id': accountId,
-							'payeeName': billerName,
-							'description': this.getBillpayview().down('[itemId=description]').getValue(),
-							'accountNumber': '9999999999'
-						};
-						Ext.Ajax.request({
-							url: baseOnePointURL+'/banking/payBills/'+billAmount,
-							method: 'POST',
-							jsonData: jsonData,
-							async: false,
-							success: function(response) {
-								var resp = Ext.decode(response.responseText);
-								if (resp.errorCode === 0) {
-									me.getBillpayview().down('[itemId=balField]').setValue(balAmountCheck());
-									me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="greenFont">Your bill is paid. Please check your loyalty points.</div>');
-								} else {
-									me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="redFont">'+resp.errorMessage+'</div>');
-								}
-							}
-						})
+					} else {
+						return;
 					}
+					
+					myWindow.show();
+					Ext.defer(function() {
+						myWindow.close();
+						if (this.getBillpayview().down('[itemId=billPayPanel]').getForm().findField('billRadio').getValue()) {
+							accountId = this.getBillpayview().down('[itemId=toPayee]').getValue();
+							Ext.Ajax.request({
+								url: baseOnePointURL+'/banking/transfer/'+accountId+'/'+payeeAmount,
+								method: 'POST',
+								async: false,
+								success: function(response) {
+									var resp = Ext.decode(response.responseText);
+									if (resp.errorCode === 0) {
+										me.getBillpayview().down('[itemId=balField]').setValue(balAmountCheck());
+										me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="greenFont">Your amount has been transferred. Thanks for using our service.</div>');
+									} else {
+										me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="redFont">'+resp.errorMessage+'</div>');
+									}
+								}
+							});
+						} else {
+							accountId = this.getBillpayview().down('[itemId=toBiller]').getValue();
+							var billerName = this.getBillpayview().down('[itemId=toBiller]').getRawValue();
+							var jsonData = {
+								'id': accountId,
+								'payeeName': billerName,
+								'description': this.getBillpayview().down('[itemId=description]').getValue(),
+								'accountNumber': '9999999999'
+							};
+							Ext.Ajax.request({
+								url: baseOnePointURL+'/banking/payBills/'+billAmount,
+								method: 'POST',
+								jsonData: jsonData,
+								async: false,
+								success: function(response) {
+									var resp = Ext.decode(response.responseText);
+									if (resp.errorCode === 0) {
+										me.getBillpayview().down('[itemId=balField]').setValue(balAmountCheck());
+										me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="greenFont">Your bill is paid. Please check your loyalty points.</div>');
+									} else {
+										me.getBillpayview().down('[itemId=billPayeeResult]').update('<div class="redFont">'+resp.errorMessage+'</div>');
+									}
+								}
+							})
+						}
+					}, 3000, this);
 				}
 			},
 			'billpayview button[itemId=billGoBack]': {
@@ -540,6 +658,7 @@ Ext.define('wallet.controller.VZWalletController',{
 		this.getLoginview().hide();
 		this.getDecisionview().hide();
 		this.getAddpayeeview().hide();
+		this.getNfcview().hide();
 		this.getCashview().hide();
 		this.getBillpayview().hide();
 		this.getLoyaltyview().hide();

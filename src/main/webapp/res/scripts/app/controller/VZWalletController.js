@@ -313,7 +313,8 @@ Ext.define('wallet.controller.VZWalletController',{
 						success: function(response) {
 							var res = Ext.decode(response.responseText);
 							if (res.errorCode === 0 ) {
-								me.getAddpayeeview().down('[itemId=payeeResult]').update('<div class="greenFont">Beneficiary added successfully. Proceed to pay.</div>');
+								var type = (getFormValues['mdnAccount']) ? 'Beneficiary' : 'Biller';
+								me.getAddpayeeview().down('[itemId=payeeResult]').update('<div class="greenFont">'+type+' added successfully. Proceed to pay.</div>');
 							} else {
 								me.getAddpayeeview().down('[itemId=payeeResult]').update('<div class="redFont">'+res.errorMessage+'</div>');
 							}
@@ -521,7 +522,10 @@ Ext.define('wallet.controller.VZWalletController',{
 							success: function(response) {
 								var resp = Ext.decode(response.responseText);
 								if (resp.errorCode === 0) {
-									Ext.Msg.alert('OnePoint Payment', 'Your points has been encashed.')
+									Ext.Msg.alert('OnePoint Payment', 'Your points has been encashed.', function() {
+										me.getLoyaltyview().down('[itemId=balField]').setValue(balAmountCheck());
+										me.getLoyaltyview().down('[itemId=points]').update('<div class="pointsRadius" style="height:100%;width:100%;"><div class="yellowFont60">0</div></div>');
+									})
 								} else {
 									me.getLoyaltyview().down('[itemId=result]').update('<div class="redFont">'+resp.errorMessage+'</div>');
 								}

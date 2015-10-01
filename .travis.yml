@@ -15,6 +15,5 @@ notifications:
       - skrishna.joy@gmail.com
       - forsrinivasan@gmail.com
       - anthonilawrance@gmail.com
-      - vzonepoint@gmail.com
     on_success: always
     on_failure: always

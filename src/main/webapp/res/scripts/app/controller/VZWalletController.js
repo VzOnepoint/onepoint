@@ -295,7 +295,7 @@ Ext.define('wallet.controller.VZWalletController',{
 					} else {
 						myWindow.show();
 						Ext.defer(function() {
-							globalPayeeId = '56';
+						//	globalPayeeId = '56';
 							myWindow.close();
 							Ext.Ajax.request({
 								url: baseOnePointURL+'/banking/transfer/'+globalPayeeId+'/1',

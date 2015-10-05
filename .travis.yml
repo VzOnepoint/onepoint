@@ -10,7 +10,7 @@ script: mvn install -Popenshift
 addons:
   coverity_scan:
     project:
-      name: "onepointvz/onepoint"
+      name: "VzOnepoint/onepoint"
     notification_email: vzonepoint@gmail.com
     build_command_prepend: "mvn clean"
     build_command:   "mvn -DskipTests=true compile"

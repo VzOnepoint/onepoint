@@ -1,19 +1,17 @@
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "d7FrwxcO86UJNr52nFZILApQNDpq3wtgvpPDNapwmoVAwrOWCKzgjIutJBu+MN7hhNbOFoblEE1FTY9VIOsWzSqgZJP1zMCP2Z0YNvEu+jr+r53RYUYut12JE1RbEMHoRUGQPFI6vAQ75K/B+djh2QwEyPm19ZJsOaaw8A2EVinHE2Ne4xA3Jo+ljqCuZwDvP3d9XRpNL72LaCd59p+NVRoQ80n4+jxWslMEFGNmojR2bfc3qUsHSxIF2sk8e2kmolLpeEec7miJgtKC4S7ngwXemAj0uNNkxHEP0I++MQg2aqQsmRpjNOn8xEZg1lscy6pmQ9wMRshMeAadSFQek7dEkoeA2Y7Eu1rgUfCNSLROjOGN4GA+Q8hFM95a6ooD5mu7lHcrSxHqWC1Cnr0yO1anP+zK66Ynqleo+hA2hAb4YKK4+rr17rgHSoM9ls/zRRlfA/Ns3D3NePe66P6uVgN0fiNMc80ruR0BdVzWxFv2ew4ca7M/+HDDvbBRhWh2bxAGAZBB2sp3UPdWqF7cZcRI4REe7KCMRuxhiRLUsyWzfrJsKlk/p7CABxzXsP0Lf5OxJrXS4XJD+sevWnED0QH5Nrnr2j8+jv8XKmq1Vuc2oqojIa0x0YjdGYtHilAvMt0FwOxXIvIAcnb+EQKKSBJosU1DWqEd9WTQXr4zqaU="
+   
 language: java
 script: mvn install -Popenshift
-deploy:
-  provider: openshift
-  user: "vzonepoint@gmail.com"
-  password: "Verizon1!" # can be encrypted
-  domain: "vzonepoint"
-  app: "my"
-  skip_cleanup: true
-  #deployment_branch: "vztest"
-notifications:
-  #hipchat: wBPGlg1L8W489S0WptesUhv8qZAhHmDzZUygJ5iQ@vzwonepoint
-  email:
-    recipients:
-      - skrishna.joy@gmail.com
-      - forsrinivasan@gmail.com
-      - anthonilawrance@gmail.com
-    on_success: always
-    on_failure: always
+
+addons:
+  coverity_scan:
+    project:
+      name: "onepointvz/onepoint"
+    notification_email: vzonepoint@gmail.com
+    build_command_prepend: "mvn clean"
+    build_command:   "mvn -DskipTests=true compile"
+    branch_pattern: coverity_scan
